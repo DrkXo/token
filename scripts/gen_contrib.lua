@@ -1101,9 +1101,22 @@ end
 -- Herdr (paired config fragment)
 -- ---------------------------------------------------------------------------
 
-local function herdr_theme_lines(p)
+local function herdr_blend(fg, bg, weight)
+  local channels = {}
+  for i = 2, 6, 2 do
+    local foreground = tonumber(fg:sub(i, i + 1), 16)
+    local background = tonumber(bg:sub(i, i + 1), 16)
+    channels[#channels + 1] = math.floor(background + (foreground - background) * weight + 0.5)
+  end
+  return string.format('#%02x%02x%02x', unpack(channels))
+end
+
+local function herdr_theme_lines(p, variant)
+  -- Herdr shares these tokens between pane borders and other UI details.
+  -- Quiet inactive frames most, retaining a stronger focus cue in light mode.
+  local light = variant == 'light'
   local colors = {
-    { 'accent', p.accent },
+    { 'accent', herdr_blend(p.accent, p.bg3, light and 0.85 or 0.70) },
     { 'panel_bg', p.bg1 },
     { 'sidebar_bg', p.bg1 },
     { 'active_row_bg', p.bg3 },
@@ -1111,7 +1124,7 @@ local function herdr_theme_lines(p)
     { 'surface0', p.bg4 },
     { 'surface1', p.bg5 },
     { 'surface_dim', p.bg2 },
-    { 'overlay0', p.fg3 },
+    { 'overlay0', herdr_blend(p.fg3, p.bg3, light and 0.35 or 0.45) },
     { 'overlay1', p.fg2 },
     { 'text', p.fg0 },
     { 'subtext0', p.fg1 },
@@ -1143,10 +1156,10 @@ local function gen_herdr(dark, light, appearance)
     '',
     '[theme.custom.dark]',
   }
-  extend_lines(lines, herdr_theme_lines(dark))
+  extend_lines(lines, herdr_theme_lines(dark, 'dark'))
   lines[#lines + 1] = ''
   lines[#lines + 1] = '[theme.custom.light]'
-  extend_lines(lines, herdr_theme_lines(light))
+  extend_lines(lines, herdr_theme_lines(light, 'light'))
   lines[#lines + 1] = ''
 
   return {

@@ -298,6 +298,12 @@ Pre-generated themes for external tools and apps. Auto-generated from the
 registered appearance palettes and shared semantic typography; rebuild after
 palette or typography changes with `make contrib`.
 
+Herdr exports soften `overlay0` and `accent` toward the terminal background for
+quieter pane frames, with stronger active/inactive separation in light mode.
+Herdr also uses these tokens for secondary UI details and accent highlights.
+This adjustment is confined to Herdr; canonical palettes and other exports retain
+their original colors.
+
 | Tool | Files | Usage |
 | --- | --- | --- |
 | [Apple Terminal](https://support.apple.com/guide/terminal/) | `contrib/apple-terminal/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.terminal` | Open the file to import it, then pick the profile in Settings > Profiles |

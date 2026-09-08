@@ -304,7 +304,6 @@ end
 
 local function expected_herdr_colors(palette)
   return {
-    accent = palette.accent,
     panel_bg = palette.bg1,
     sidebar_bg = palette.bg1,
     active_row_bg = palette.bg3,
@@ -312,7 +311,6 @@ local function expected_herdr_colors(palette)
     surface0 = palette.bg4,
     surface1 = palette.bg5,
     surface_dim = palette.bg2,
-    overlay0 = palette.fg3,
     overlay1 = palette.fg2,
     text = palette.fg0,
     subtext0 = palette.fg1,
@@ -338,11 +336,10 @@ for _, appearance in ipairs(appearances) do
 
   local palette_fn = require(appearance.palette)
   for _, variant in ipairs({ 'dark', 'light' }) do
-    equal(
-      sections['theme.custom.' .. variant],
-      expected_herdr_colors(palette_fn(variant)),
-      'Herdr colors for ' .. appearance.name .. ' ' .. variant
-    )
+    local colors = vim.deepcopy(sections['theme.custom.' .. variant])
+    truthy(colors.accent and colors.overlay0, 'Herdr border tokens exist')
+    colors.accent, colors.overlay0 = nil, nil
+    equal(colors, expected_herdr_colors(palette_fn(variant)), 'Herdr colors for ' .. appearance.name .. ' ' .. variant)
   end
 end
 
@@ -908,6 +905,21 @@ local function contrast(left, right)
     a, b = b, a
   end
   return (a + 0.05) / (b + 0.05)
+end
+
+for _, appearance in ipairs(appearances) do
+  local sections = simple_toml_sections(read_text('contrib/herdr/' .. appearance.slug .. '.toml'))
+  for _, variant in ipairs({ 'dark', 'light' }) do
+    local p = require(appearance.palette)(variant)
+    local colors = sections['theme.custom.' .. variant]
+    local active = contrast(colors.accent, p.bg3)
+    local inactive = contrast(colors.overlay0, p.bg3)
+    local label = 'Herdr ' .. appearance.name .. ' ' .. variant
+    truthy(active < contrast(p.accent, p.bg3), label .. ' softens active borders')
+    truthy(inactive < contrast(p.fg3, p.bg3), label .. ' softens inactive borders')
+    truthy(active > inactive * 1.5, label .. ' keeps focus clearly distinct')
+    truthy(inactive > 1.3, label .. ' keeps inactive borders visible')
+  end
 end
 
 local foreground_keys = {

@@ -275,6 +275,77 @@ for _, appearance in ipairs(require('token.appearance').all()) do
   end
 end
 
+local function simple_toml_sections(content)
+  local sections = {}
+  local current
+  for line in content:gmatch('[^\r\n]+') do
+    local section = line:match('^%[([^]]+)%]$')
+    if section then
+      current = {}
+      sections[section] = current
+    elseif current and not line:match('^%s*#') then
+      local key, value = line:match('^([%w_]+)%s*=%s*(.-)%s*$')
+      if key then
+        local string_value = value:match('^"(.*)"$')
+        if string_value then
+          current[key] = string_value
+        elseif value == 'true' then
+          current[key] = true
+        elseif value == 'false' then
+          current[key] = false
+        else
+          error('unsupported generated TOML value: ' .. value, 0)
+        end
+      end
+    end
+  end
+  return sections
+end
+
+local function expected_herdr_colors(palette)
+  return {
+    accent = palette.accent,
+    panel_bg = palette.bg1,
+    sidebar_bg = palette.bg1,
+    active_row_bg = palette.bg3,
+    selection_bg = palette.sel,
+    surface0 = palette.bg4,
+    surface1 = palette.bg5,
+    surface_dim = palette.bg2,
+    overlay0 = palette.fg3,
+    overlay1 = palette.fg2,
+    text = palette.fg0,
+    subtext0 = palette.fg1,
+    mauve = palette.purple,
+    green = palette.green,
+    yellow = palette.yellow,
+    red = palette.red,
+    blue = palette.blue,
+    teal = palette.cyan,
+    peach = palette.orange,
+  }
+end
+
+for _, appearance in ipairs(appearances) do
+  local sections = simple_toml_sections(read_text('contrib/herdr/' .. appearance.slug .. '.toml'))
+  equal(sorted_keys(sections), { 'theme', 'theme.custom.dark', 'theme.custom.light' }, 'Herdr table inventory')
+  equal(sections.theme, {
+    name = 'terminal',
+    auto_switch = true,
+    dark_name = 'terminal',
+    light_name = 'terminal',
+  }, 'Herdr theme settings for ' .. appearance.name)
+
+  local palette_fn = require(appearance.palette)
+  for _, variant in ipairs({ 'dark', 'light' }) do
+    equal(
+      sections['theme.custom.' .. variant],
+      expected_herdr_colors(palette_fn(variant)),
+      'Herdr colors for ' .. appearance.name .. ' ' .. variant
+    )
+  end
+end
+
 local function fish_sections(content)
   local sections = {}
   local current

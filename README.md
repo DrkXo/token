@@ -311,6 +311,7 @@ palette or typography changes with `make contrib`.
 | [fzf](https://github.com/junegunn/fzf) | `contrib/fzf/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.{fish,zsh}` | Source the matching shell file |
 | [Ghostty](https://ghostty.org/) | `contrib/ghostty/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}` | Copy to the Ghostty themes directory and select the matching pair |
 | [GtkSourceView](https://gitlab.gnome.org/GNOME/gtksourceview) | `contrib/gtksourceview/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.xml` | Copy to the GtkSourceView styles directory and select the scheme |
+| [Herdr](https://herdr.dev/) | `contrib/herdr/{token,token-flint,token-temper,token-ultra,token-meridian}.toml` | With Herdr 0.9.0+, replace existing theme tables in `config.toml` with the selected fragment, run `herdr config check`, then `herdr server reload-config` |
 | [iTerm2](https://iterm2.com/) | `contrib/iterm2/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.itermcolors` | Import from Profiles > Colors > Color Presets |
 | [kitty](https://sw.kovidgoyal.net/kitty/) | `contrib/kitty/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.conf` | Include the selected file in `kitty.conf` |
 | [lazygit](https://github.com/jesseduffield/lazygit) | `contrib/lazygit/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.yml` | Merge the selected file into `config.yml` |

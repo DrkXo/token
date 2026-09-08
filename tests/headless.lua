@@ -131,8 +131,8 @@ for _, appearance in ipairs(appearances) do
       prompt_symbol = '󰅂',
       help_header = '󰘥 Available Commands',
     }, 'Hermes branding')
-    equal(skin.banner_logo, '[' .. palette.accent .. ']Hermes Agent[/]', 'Hermes compact title')
-    equal(skin.banner_hero, '[' .. palette.accent2 .. ']󰛓[/]', 'Hermes feather emblem')
+    equal(skin.banner_logo, nil, name .. ' inherits the Hermes logo')
+    equal(skin.banner_hero, nil, name .. ' inherits the Hermes hero for TUI column sizing')
     equal(skin.tool_emojis.terminal, vim.fn.nr2char(0xf018d), 'Hermes terminal icon')
     equal(skin.tool_emojis.web_search, vim.fn.nr2char(0xf0349), 'Hermes search icon')
     equal(skin.tool_emojis.read_file, vim.fn.nr2char(0xf09ee), 'Hermes file icon')

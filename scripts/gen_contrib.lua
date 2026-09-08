@@ -2607,6 +2607,8 @@ local function gen_hermes(p, variant, appearance)
   for i, face in ipairs(faces) do
     faces[i] = json_encode(face)
   end
+  -- Keep Hermes' default logo and hero: the TUI sizes its session-details
+  -- column from the hero artwork, so a single glyph makes it too narrow.
   extend_lines(lines, {
     'spinner:',
     '  waiting_faces: ' .. '[' .. table.concat(faces, ', ') .. ']',
@@ -2620,8 +2622,6 @@ local function gen_hermes(p, variant, appearance)
     '  response_label: " 󰛓 Hermes "',
     '  prompt_symbol: "󰅂"',
     '  help_header: "󰘥 Available Commands"',
-    'banner_logo: ' .. json_encode('[' .. p.accent .. ']Hermes Agent[/]'),
-    'banner_hero: ' .. json_encode('[' .. p.accent2 .. ']󰛓[/]'),
     'tool_emojis:',
   })
   -- Nerd Fonts 3 md glyphs: console, magnify, file_document_outline,

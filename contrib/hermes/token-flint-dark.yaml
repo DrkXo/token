@@ -43,8 +43,6 @@ branding:
   response_label: " 󰛓 Hermes "
   prompt_symbol: "󰅂"
   help_header: "󰘥 Available Commands"
-banner_logo: "[#EB9E83]Hermes Agent[/]"
-banner_hero: "[#F8D28A]󰛓[/]"
 tool_emojis:
   terminal: "󰆍"
   web_search: "󰍉"

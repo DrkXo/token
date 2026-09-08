@@ -347,6 +347,8 @@ mkdir -p "${HERMES_HOME:-$HOME/.hermes}/skins"
 cp contrib/hermes/*.yaml "${HERMES_HOME:-$HOME/.hermes}/skins/"
 ```
 
+Repeat the copy command after updating Token to refresh installed skins.
+
 Select `/skin token-ultra-dark` in Hermes. To persist the selection, merge this
 into `${HERMES_HOME:-$HOME/.hermes}/config.yaml` under the existing `display` key:
 
@@ -359,8 +361,9 @@ Select the matching Token appearance in your terminal and use a
 [Nerd Fonts 3 font](https://www.nerdfonts.com/) for the feather, tool icons, and
 circle-slice spinner frames. Dark and light skins are selected explicitly;
 for example, use `/skin token-ultra-light` with a light terminal background.
-Skins preserve Hermes' name and message wording, with a compact title and feather
-replacing its startup artwork. Customization uses the
+Skins preserve Hermes' name, message wording, and built-in startup logo and hero
+artwork. Keeping the default artwork preserves the TUI's session-details column
+width. Customization uses the
 [Hermes skin API](https://github.com/NousResearch/hermes-agent/blob/main/hermes_cli/skin_engine.py).
 
 ## License

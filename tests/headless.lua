@@ -72,6 +72,75 @@ end
 local emacs_copy_glob = 'token{' .. table.concat(emacs_suffixes, ',') .. '}-{dark,light}-theme.el'
 truthy(emacs_readme:find(emacs_copy_glob, 1, true), 'Emacs copy command omits a registered appearance')
 
+-- Hermes emits a deliberately small YAML subset with JSON-quoted values.
+local hermes_roles = {
+  fg0 = { 'banner_text', 'prompt', 'status_bar_text' },
+  fg2 = { 'banner_dim', 'status_bar_dim' },
+  fg3 = { 'banner_border', 'input_rule', 'response_border', 'session_border' },
+  accent = { 'banner_title', 'ui_accent', 'status_bar_strong' },
+  accent2 = { 'banner_accent', 'ui_label', 'session_label' },
+  bg1 = { 'status_bar_bg', 'voice_status_bg', 'completion_menu_bg', 'completion_menu_meta_bg' },
+  sel = { 'selection_bg', 'completion_menu_current_bg', 'completion_menu_meta_current_bg' },
+  green = { 'ui_ok', 'status_bar_good' },
+  red = { 'ui_error', 'status_bar_critical' },
+  yellow = { 'ui_warn', 'status_bar_warn' },
+  orange = { 'status_bar_bad' },
+  blue = { 'shell_dollar' },
+}
+for _, appearance in ipairs(appearances) do
+  for _, variant in ipairs({ 'dark', 'light' }) do
+    local name = appearance.slug .. '-' .. variant
+    local source = read_text('contrib/hermes/' .. name .. '.yaml')
+    local skin, section = {}, nil
+    for line in source:gmatch('[^\n]+') do
+      local key = line:match('^([%w_]+):$')
+      if key then
+        skin[key], section = {}, key
+      else
+        local indent, field, value = line:match('^(%s*)([%w_]+): (.+)$')
+        if field then
+          local target = indent == '' and skin or skin[section]
+          truthy(target[field] == nil, 'duplicate Hermes key: ' .. field)
+          target[field] = vim.json.decode(value)
+        end
+      end
+    end
+    equal(skin.name, name, 'Hermes skin name')
+    local palette = require(appearance.palette)(variant)
+    local count = 0
+    for role, fields in pairs(hermes_roles) do
+      for _, field in ipairs(fields) do
+        equal(skin.colors[field], palette[role], name .. ' ' .. field)
+        count = count + 1
+      end
+    end
+    equal(#vim.tbl_keys(skin.colors), count, 'Hermes color coverage')
+    local frames = {}
+    for code = 0xf0a9e, 0xf0aa5 do
+      frames[#frames + 1] = vim.fn.nr2char(code)
+    end
+    equal(skin.spinner.waiting_faces, frames, 'Hermes waiting frames')
+    equal(skin.spinner.thinking_faces, frames, 'Hermes thinking frames')
+    equal(skin.spinner.wings, { { '', '' } }, 'Hermes empty wing pair')
+    equal(skin.spinner.thinking_verbs, { 'thinking', 'planning', 'checking' }, 'Hermes verbs')
+    equal(skin.branding, {
+      agent_name = 'Hermes Agent',
+      welcome = 'Welcome to Hermes Agent! Type your message or /help for commands.',
+      goodbye = 'Goodbye! 󰛓',
+      response_label = ' 󰛓 Hermes ',
+      prompt_symbol = '󰅂',
+      help_header = '󰘥 Available Commands',
+    }, 'Hermes branding')
+    equal(skin.banner_logo, '[' .. palette.accent .. ']Hermes Agent[/]', 'Hermes compact title')
+    equal(skin.banner_hero, '[' .. palette.accent2 .. ']󰛓[/]', 'Hermes feather emblem')
+    equal(skin.tool_emojis.terminal, vim.fn.nr2char(0xf018d), 'Hermes terminal icon')
+    equal(skin.tool_emojis.web_search, vim.fn.nr2char(0xf0349), 'Hermes search icon')
+    equal(skin.tool_emojis.read_file, vim.fn.nr2char(0xf09ee), 'Hermes file icon')
+    equal(skin.tool_emojis.patch, vim.fn.nr2char(0xf11e8), 'Hermes edit icon')
+  end
+end
+equal(#vim.fn.glob(root .. '/contrib/hermes/*.yaml', false, true), #appearances * 2, 'Hermes file inventory')
+
 -- Generated schemas and visible shell roles stay aligned with their supported tools.
 local generated_json = { 'contrib/vscode/package.json' }
 for _, appearance in ipairs(require('token.appearance').all()) do

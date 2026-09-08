@@ -318,6 +318,7 @@ their original colors.
 | [Ghostty](https://ghostty.org/) | `contrib/ghostty/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}` | Copy to the Ghostty themes directory and select the matching pair |
 | [GtkSourceView](https://gitlab.gnome.org/GNOME/gtksourceview) | `contrib/gtksourceview/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.xml` | Copy to the GtkSourceView styles directory and select the scheme |
 | [Herdr](https://herdr.dev/) | `contrib/herdr/{token,token-flint,token-temper,token-ultra,token-meridian}.toml` | With Herdr 0.9.0+, replace existing theme tables in `config.toml` with the selected fragment, run `herdr config check`, then `herdr server reload-config` |
+| [Hermes Agent](https://hermes-agent.nousresearch.com/docs/user-guide/features/skins) | `contrib/hermes/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.yaml` | Copy to the Hermes skins directory and select with `/skin` (see below) |
 | [iTerm2](https://iterm2.com/) | `contrib/iterm2/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.itermcolors` | Import from Profiles > Colors > Color Presets |
 | [kitty](https://sw.kovidgoyal.net/kitty/) | `contrib/kitty/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.conf` | Include the selected file in `kitty.conf` |
 | [lazygit](https://github.com/jesseduffield/lazygit) | `contrib/lazygit/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.yml` | Merge the selected file into `config.yml` |
@@ -336,6 +337,31 @@ compromise between its light and dark accents. Keeping one user-level accent
 avoids having to change the Obsidian setting whenever macOS switches
 appearance. Token Ultra, Token Meridian, Token Flint, and Token Temper are independently
 installable as `Token Ultra`, `Token Meridian`, `Token Flint`, and `Token Temper`.
+
+### Hermes Agent
+
+From the Token checkout, copy the generated skins:
+
+```sh
+mkdir -p "${HERMES_HOME:-$HOME/.hermes}/skins"
+cp contrib/hermes/*.yaml "${HERMES_HOME:-$HOME/.hermes}/skins/"
+```
+
+Select `/skin token-ultra-dark` in Hermes. To persist the selection, merge this
+into `${HERMES_HOME:-$HOME/.hermes}/config.yaml` under the existing `display` key:
+
+```yaml
+display:
+  skin: token-ultra-dark
+```
+
+Select the matching Token appearance in your terminal and use a
+[Nerd Fonts 3 font](https://www.nerdfonts.com/) for the feather, tool icons, and
+circle-slice spinner frames. Dark and light skins are selected explicitly;
+for example, use `/skin token-ultra-light` with a light terminal background.
+Skins preserve Hermes' name and message wording, with a compact title and feather
+replacing its startup artwork. Customization uses the
+[Hermes skin API](https://github.com/NousResearch/hermes-agent/blob/main/hermes_cli/skin_engine.py).
 
 ## License
 

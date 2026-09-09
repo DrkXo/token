@@ -141,6 +141,84 @@ for _, appearance in ipairs(appearances) do
 end
 equal(#vim.fn.glob(root .. '/contrib/hermes/*.yaml', false, true), #appearances * 2, 'Hermes file inventory')
 
+local pi_vars = {
+  bg0 = 'bg0',
+  bg1 = 'bg1',
+  bg2 = 'bg2',
+  bg3 = 'bg3',
+  bg4 = 'bg4',
+  bg5 = 'bg5',
+  fg0 = 'fg0',
+  fg1 = 'fg1',
+  fg2 = 'fg2',
+  fg3 = 'fg3',
+  accent = 'accent',
+  accent2 = 'accent2',
+  blue = 'blue',
+  green = 'green',
+  red = 'red',
+  yellow = 'yellow',
+  purple = 'purple',
+  cyan = 'cyan',
+  selection = 'sel',
+  diffAdd = 'diff_add',
+  diffDel = 'diff_del',
+}
+local pi_colors = {
+  accent = 'accent',
+  border = 'fg3',
+  borderAccent = 'accent',
+  borderMuted = 'bg5',
+  success = 'green',
+  error = 'red',
+  warning = 'yellow',
+  muted = 'fg2',
+  dim = 'fg3',
+  text = 'fg0',
+  thinkingText = 'fg2',
+  selectedBg = 'selection',
+  userMessageBg = 'bg4',
+  userMessageText = 'fg0',
+  customMessageBg = 'bg5',
+  customMessageText = 'fg0',
+  customMessageLabel = 'purple',
+  toolPendingBg = 'bg2',
+  toolSuccessBg = 'diffAdd',
+  toolErrorBg = 'diffDel',
+  toolTitle = 'fg0',
+  toolOutput = 'fg2',
+  mdHeading = 'accent',
+  mdLink = 'blue',
+  mdLinkUrl = 'fg2',
+  mdCode = 'green',
+  mdCodeBlock = 'fg0',
+  mdCodeBlockBorder = 'fg3',
+  mdQuote = 'fg2',
+  mdQuoteBorder = 'fg3',
+  mdHr = 'fg3',
+  mdListBullet = 'accent2',
+  toolDiffAdded = 'green',
+  toolDiffRemoved = 'red',
+  toolDiffContext = 'fg2',
+  syntaxComment = 'fg2',
+  syntaxKeyword = 'accent2',
+  syntaxFunction = 'accent',
+  syntaxVariable = 'fg0',
+  syntaxString = 'green',
+  syntaxNumber = 'purple',
+  syntaxType = 'blue',
+  syntaxOperator = 'fg1',
+  syntaxPunctuation = 'fg1',
+  thinkingOff = 'fg3',
+  thinkingMinimal = 'fg3',
+  thinkingLow = 'blue',
+  thinkingMedium = 'cyan',
+  thinkingHigh = 'purple',
+  thinkingXhigh = 'accent',
+  thinkingMax = 'accent',
+  bashMode = 'green',
+}
+
 -- Generated schemas and visible shell roles stay aligned with their supported tools.
 local generated_json = { 'contrib/vscode/package.json' }
 for _, appearance in ipairs(require('token.appearance').all()) do
@@ -148,6 +226,29 @@ for _, appearance in ipairs(require('token.appearance').all()) do
     or 'contrib/obsidian/' .. appearance.slug .. '/'
   generated_json[#generated_json + 1] = obsidian_prefix .. 'manifest.json'
   generated_json[#generated_json + 1] = 'contrib/windows-terminal/' .. appearance.slug .. '.json'
+
+  for _, variant in ipairs({ 'dark', 'light' }) do
+    local name = appearance.slug .. '-' .. variant
+    local theme = vim.json.decode(read_text('contrib/pi/' .. name .. '.json'))
+    local palette = require(appearance.palette)(variant)
+    equal(
+      theme['$schema'],
+      'https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/src/modes/interactive/theme/theme-schema.json',
+      name .. ' Pi schema'
+    )
+    equal(theme.name, name, name .. ' Pi theme name')
+    equal(#vim.tbl_keys(theme.vars), #vim.tbl_keys(pi_vars), name .. ' Pi variable coverage')
+    for variable, role in pairs(pi_vars) do
+      equal(theme.vars[variable], palette[role], name .. ' Pi variable ' .. variable)
+    end
+    equal(#vim.tbl_keys(theme.colors), #vim.tbl_keys(pi_colors), name .. ' Pi color coverage')
+    equal(theme.colors, pi_colors, name .. ' Pi colors')
+    equal(theme.export, {
+      pageBg = palette.bg0,
+      cardBg = palette.bg2,
+      infoBg = palette.diff_change,
+    }, name .. ' Pi export colors')
+  end
 
   local obsidian_css = read_text(obsidian_prefix .. 'theme.css')
   local hsl_values = 0

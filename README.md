@@ -323,6 +323,7 @@ their original colors.
 | [kitty](https://sw.kovidgoyal.net/kitty/) | `contrib/kitty/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.conf` | Include the selected file in `kitty.conf` |
 | [lazygit](https://github.com/jesseduffield/lazygit) | `contrib/lazygit/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.yml` | Merge the selected file into `config.yml` |
 | [Obsidian](https://obsidian.md/) | `contrib/obsidian/`, `contrib/obsidian/{token-flint,token-temper,token-ultra,token-meridian}/` | Install the selected appearance directory |
+| [Pi](https://pi.dev/) | `contrib/pi/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.json` | Copy the selected file to `~/.pi/agent/themes/`, then select its name in `/settings` |
 | [ripgrep](https://github.com/BurntSushi/ripgrep) | `contrib/ripgrep/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.ripgreprc` | Point `RIPGREP_CONFIG_PATH` at the selected file |
 | [Starship](https://starship.rs/) | `contrib/starship/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.toml` | Append the file and select the matching palette name |
 | [Sublime Text](https://www.sublimetext.com/) | `contrib/sublime/{token,token-flint,token-temper,token-ultra,token-meridian}-{dark,light}.sublime-color-scheme` | Copy to `Packages/User/` and select the scheme |
@@ -337,6 +338,10 @@ compromise between its light and dark accents. Keeping one user-level accent
 avoids having to change the Obsidian setting whenever macOS switches
 appearance. Token Ultra, Token Meridian, Token Flint, and Token Temper are independently
 installable as `Token Ultra`, `Token Meridian`, `Token Flint`, and `Token Temper`.
+
+Pi syntax and Markdown colors follow the appearance role profile when one is
+registered. Pi's single heading color uses the first heading role; appearances
+without a profile retain the default palette mappings.
 
 ### Hermes Agent
 

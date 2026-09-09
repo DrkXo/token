@@ -1097,6 +1097,114 @@ local function gen_ghostty(p, variant, term, appearance)
   return { path = 'contrib/ghostty/' .. appearance.slug .. '-' .. variant, content = table.concat(lines, '\n') }
 end
 
+local function gen_pi(p, variant, appearance)
+  local profile = role_profile(p, variant, appearance)
+  local r = profile and profile.syntax
+  local theme = json_object({
+    {
+      '$schema',
+      'https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/src/modes/interactive/theme/theme-schema.json',
+    },
+    { 'name', appearance.slug .. '-' .. variant },
+    {
+      'vars',
+      json_object({
+        { 'bg0', p.bg0 },
+        { 'bg1', p.bg1 },
+        { 'bg2', p.bg2 },
+        { 'bg3', p.bg3 },
+        { 'bg4', p.bg4 },
+        { 'bg5', p.bg5 },
+        { 'fg0', p.fg0 },
+        { 'fg1', p.fg1 },
+        { 'fg2', p.fg2 },
+        { 'fg3', p.fg3 },
+        { 'accent', p.accent },
+        { 'accent2', p.accent2 },
+        { 'blue', p.blue },
+        { 'green', p.green },
+        { 'red', p.red },
+        { 'yellow', p.yellow },
+        { 'purple', p.purple },
+        { 'cyan', p.cyan },
+        { 'selection', p.sel },
+        { 'diffAdd', p.diff_add },
+        { 'diffDel', p.diff_del },
+      }),
+    },
+    {
+      'colors',
+      json_object({
+        { 'accent', 'accent' },
+        { 'border', 'fg3' },
+        { 'borderAccent', 'accent' },
+        { 'borderMuted', 'bg5' },
+        { 'success', 'green' },
+        { 'error', 'red' },
+        { 'warning', 'yellow' },
+        { 'muted', 'fg2' },
+        { 'dim', 'fg3' },
+        { 'text', 'fg0' },
+        { 'thinkingText', 'fg2' },
+        { 'selectedBg', 'selection' },
+        { 'userMessageBg', 'bg4' },
+        { 'userMessageText', 'fg0' },
+        { 'customMessageBg', 'bg5' },
+        { 'customMessageText', 'fg0' },
+        { 'customMessageLabel', 'purple' },
+        { 'toolPendingBg', 'bg2' },
+        { 'toolSuccessBg', 'diffAdd' },
+        { 'toolErrorBg', 'diffDel' },
+        { 'toolTitle', 'fg0' },
+        { 'toolOutput', 'fg2' },
+        { 'mdHeading', profile and profile.headings[1] or 'accent' },
+        { 'mdLink', r and r.link.fg or 'blue' },
+        { 'mdLinkUrl', r and r.link.fg or 'fg2' },
+        { 'mdCode', r and r.literal.fg or 'green' },
+        { 'mdCodeBlock', r and r.literal.fg or 'fg0' },
+        { 'mdCodeBlockBorder', 'fg3' },
+        { 'mdQuote', r and r.quote.fg or 'fg2' },
+        { 'mdQuoteBorder', 'fg3' },
+        { 'mdHr', 'fg3' },
+        { 'mdListBullet', r and r.control.fg or 'accent2' },
+        { 'toolDiffAdded', 'green' },
+        { 'toolDiffRemoved', 'red' },
+        { 'toolDiffContext', 'fg2' },
+        { 'syntaxComment', r and r.comment.fg or 'fg2' },
+        { 'syntaxKeyword', r and r.control.fg or 'accent2' },
+        { 'syntaxFunction', r and r.definition.fg or 'accent' },
+        { 'syntaxVariable', r and r.variable.fg or 'fg0' },
+        { 'syntaxString', r and r.literal.fg or 'green' },
+        { 'syntaxNumber', r and (r.number or r.literal).fg or 'purple' },
+        { 'syntaxType', r and r.type.fg or 'blue' },
+        { 'syntaxOperator', r and r.operator.fg or 'fg1' },
+        { 'syntaxPunctuation', r and r.punctuation.fg or 'fg1' },
+        { 'thinkingOff', 'fg3' },
+        { 'thinkingMinimal', 'fg3' },
+        { 'thinkingLow', 'blue' },
+        { 'thinkingMedium', 'cyan' },
+        { 'thinkingHigh', 'purple' },
+        { 'thinkingXhigh', 'accent' },
+        { 'thinkingMax', 'accent' },
+        { 'bashMode', 'green' },
+      }),
+    },
+    {
+      'export',
+      json_object({
+        { 'pageBg', p.bg0 },
+        { 'cardBg', p.bg2 },
+        { 'infoBg', p.diff_change },
+      }),
+    },
+  })
+
+  return {
+    path = 'contrib/pi/' .. appearance.slug .. '-' .. variant .. '.json',
+    content = json_encode(theme) .. '\n',
+  }
+end
+
 -- ---------------------------------------------------------------------------
 -- Herdr (paired config fragment)
 -- ---------------------------------------------------------------------------
@@ -2678,6 +2786,7 @@ local function main()
       files[#files + 1] = gen_fzf(p, variant, term, appearance)
       files[#files + 1] = gen_fzf_zsh(p, variant, term, appearance)
       files[#files + 1] = gen_ghostty(p, variant, term, appearance)
+      files[#files + 1] = gen_pi(p, variant, appearance)
       files[#files + 1] = gen_hermes(p, variant, appearance)
       files[#files + 1] = gen_kitty(p, variant, term, appearance)
       files[#files + 1] = gen_iterm2(p, variant, term, appearance)

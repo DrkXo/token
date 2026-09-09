@@ -242,7 +242,36 @@ for _, appearance in ipairs(require('token.appearance').all()) do
       equal(theme.vars[variable], palette[role], name .. ' Pi variable ' .. variable)
     end
     equal(#vim.tbl_keys(theme.colors), #vim.tbl_keys(pi_colors), name .. ' Pi color coverage')
-    equal(theme.colors, pi_colors, name .. ' Pi colors')
+    local expected_colors = vim.deepcopy(pi_colors)
+    local profile = require('token.appearance').roles(appearance.name, palette, variant == 'dark')
+    if profile then
+      local syntax_roles = {
+        syntaxComment = 'comment',
+        syntaxKeyword = 'control',
+        syntaxFunction = 'definition',
+        syntaxVariable = 'variable',
+        syntaxString = 'literal',
+        syntaxNumber = profile.syntax.number and 'number' or 'literal',
+        syntaxType = 'type',
+        syntaxOperator = 'operator',
+        syntaxPunctuation = 'punctuation',
+        mdLink = 'link',
+        mdLinkUrl = 'link',
+        mdCode = 'literal',
+        mdCodeBlock = 'literal',
+        mdQuote = 'quote',
+        mdListBullet = 'control',
+      }
+      for color, role in pairs(syntax_roles) do
+        expected_colors[color] = profile.syntax[role].fg
+      end
+      expected_colors.mdHeading = profile.headings[1]
+    end
+    for color, expected in pairs(expected_colors) do
+      local actual = theme.colors[color]
+      truthy(theme.vars[actual] or actual:match('^#%x%x%x%x%x%x$'), name .. ' Pi color reference ' .. color)
+      equal(theme.vars[actual] or actual, theme.vars[expected] or expected, name .. ' Pi color ' .. color)
+    end
     equal(theme.export, {
       pageBg = palette.bg0,
       cardBg = palette.bg2,

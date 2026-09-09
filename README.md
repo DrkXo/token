@@ -339,6 +339,10 @@ avoids having to change the Obsidian setting whenever macOS switches
 appearance. Token Ultra, Token Meridian, Token Flint, and Token Temper are independently
 installable as `Token Ultra`, `Token Meridian`, `Token Flint`, and `Token Temper`.
 
+Pi syntax and Markdown colors follow the appearance role profile when one is
+registered. Pi's single heading color uses the first heading role; appearances
+without a profile retain the default palette mappings.
+
 ### Hermes Agent
 
 From the Token checkout, copy the generated skins:

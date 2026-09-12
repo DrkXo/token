@@ -74,6 +74,7 @@
 ---@field nvimtree? boolean Enable highlights for nvim-tree.lua.
 ---@field oil? boolean Enable highlights for oil.nvim.
 ---@field render_markdown? boolean Enable highlights for render-markdown.nvim.
+---@field sidekick? boolean Enable highlights for sidekick.nvim.
 ---@field snacks? boolean Enable highlights for snacks.nvim.
 ---@field telescope? boolean Enable highlights for telescope.nvim.
 ---@field todo_comments? boolean Enable highlights for todo-comments.nvim.

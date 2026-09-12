@@ -1636,6 +1636,75 @@ load()
 equal(loaded('gitsigns'), false, 'gitsigns loaded by default')
 equal(loaded('snacks'), false, 'snacks loaded by default')
 equal(loaded('telescope'), false, 'telescope loaded by default')
+equal(loaded('sidekick'), false, 'sidekick loaded by default')
+
+-- Sidekick preserves upstream semantic links across every appearance and variant.
+local sidekick_links = {
+  SidekickDiffContext = 'DiffChange',
+  SidekickDiffAdd = 'DiffText',
+  SidekickDiffDelete = 'DiffDelete',
+  SidekickSign = 'Special',
+  SidekickChat = 'NormalFloat',
+  SidekickCliMissing = 'DiagnosticError',
+  SidekickCliAttached = 'Special',
+  SidekickCliStarted = 'DiagnosticWarn',
+  SidekickCliInstalled = 'DiagnosticOk',
+  SidekickCliUnavailable = 'DiagnosticError',
+  SidekickLocDelim = 'Delimiter',
+  SidekickLocFile = '@markup.link',
+  SidekickLocNum = '@attribute',
+  SidekickLocRow = 'SidekickLocDelim',
+  SidekickLocCol = 'SidekickLocDelim',
+}
+for name in pairs(sidekick_links) do
+  equal(hl(name), {}, name .. ' defined by default')
+end
+for _, plugins in ipairs({ { sidekick = true }, { all = true } }) do
+  token.setup({ plugins = plugins })
+  for _, appearance in ipairs(appearances) do
+    for _, background in ipairs({ 'dark', 'light' }) do
+      load(background, appearance.name)
+      truthy(loaded('sidekick'), 'Sidekick selection missing')
+      for name, target in pairs(sidekick_links) do
+        local label = name .. ' in ' .. appearance.name .. ' ' .. background
+        equal(vim.api.nvim_get_hl(0, { name = name, link = true }).link, target, label .. ' link')
+        truthy(not vim.tbl_isempty(hl(name)), label .. ' resolves to an empty group')
+        equal(hl(name), hl(target), label .. ' resolved attributes')
+      end
+    end
+  end
+end
+for _, plugins in ipairs({ { all = true, sidekick = false }, { sidekick = false } }) do
+  token.setup({ plugins = { sidekick = true } })
+  load()
+  token.setup({ plugins = plugins })
+  load()
+  equal(loaded('sidekick'), false, 'disabled Sidekick module retained after reload')
+  for name in pairs(sidekick_links) do
+    equal(hl(name), {}, name .. ' retained after disabling Sidekick')
+  end
+end
+token.setup({ plugins = { sidekick = true }, transparent = true })
+for _, appearance in ipairs(appearances) do
+  for _, background in ipairs({ 'dark', 'light' }) do
+    load(background, appearance.name)
+    equal(hl('SidekickChat'), hl('NormalFloat'), 'transparent SidekickChat follows NormalFloat')
+    equal(hl('SidekickChat').bg, nil, 'transparent SidekickChat retains a background')
+  end
+end
+token.setup({
+  plugins = { sidekick = true },
+  highlights = { all = { SidekickDiffAdd = { fg = '#112233', bold = true } } },
+})
+load()
+equal(hl('SidekickDiffAdd').fg, tonumber('112233', 16), 'user Sidekick foreground override lost')
+equal(hl('SidekickDiffAdd').bold, true, 'user Sidekick bold override lost')
+equal(hl('SidekickDiffAdd').bg, nil, 'user Sidekick override retained diff background')
+equal(
+  vim.api.nvim_get_hl(0, { name = 'SidekickDiffAdd', link = true }).link,
+  nil,
+  'user Sidekick override retained link'
+)
 
 -- Individual selection, all, explicit exclusion, and shrinking reloads.
 token.setup({ plugins = { telescope = true } })
@@ -2248,6 +2317,9 @@ local function parity(config, label)
     for _, background in ipairs({ 'dark', 'light' }) do
       local _, groups = require('token.theme').build(background, appearance.name)
       if label == 'all-plugin' then
+        for name, target in pairs(sidekick_links) do
+          equal(groups[name], { link = target }, 'all-plugin Sidekick link for ' .. name)
+        end
         for _, group in ipairs(mini_statuscolumn_links) do
           truthy(
             groups[group[1]],

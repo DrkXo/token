@@ -250,8 +250,16 @@ filenames below; Lualine remains available on demand and is not selected here.
 `blink`, `blink_indent`, `claudecode`, `cmp`, `dap_ui`, `diffview`, `flash`,
 `fugitive`, `fzf`, `gitsigns`, `hlchunk`, `ibl`, `lazy`, `markview`, `mason`,
 `matchup`, `mini`, `neo_tree`, `neogit`, `noice`, `nvimtree`, `oil`,
-`render_markdown`, `snacks`, `telescope`, `todo_comments`,
+`render_markdown`, `sidekick`, `snacks`, `telescope`, `todo_comments`,
 `treesitter_context`, `trouble`, and `whichkey`.
+
+Enable [Sidekick](https://github.com/folke/sidekick.nvim) highlights with:
+
+```lua
+require('token').setup({
+  plugins = { sidekick = true },
+})
+```
 
 `plugins.mini` includes `mini.statuscolumn`; consequently, `plugins.all` also
 enables its Token highlight fallbacks.

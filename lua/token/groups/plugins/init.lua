@@ -22,6 +22,7 @@ local registry = {
   nvimtree = 'token.groups.plugins.nvimtree',
   oil = 'token.groups.plugins.oil',
   render_markdown = 'token.groups.plugins.render_markdown',
+  sidekick = 'token.groups.plugins.sidekick',
   snacks = 'token.groups.plugins.snacks',
   telescope = 'token.groups.plugins.telescope',
   todo_comments = 'token.groups.plugins.todo_comments',

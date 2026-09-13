@@ -27,6 +27,19 @@ local function lsp(_p)
     ['@lsp.type.typeParameter'] = { link = '@type' },
     ['@lsp.type.variable'] = { link = '@variable' },
 
+    -- BasedPyright Python extensions
+    ['@lsp.type.selfParameter.python'] = { link = '@variable.parameter.builtin' },
+    ['@lsp.type.clsParameter.python'] = { link = '@variable.parameter.builtin' },
+
+    -- Tombi TOML extensions
+    ['@lsp.type.table.toml'] = { link = '@property' },
+    ['@lsp.type.key.toml'] = { link = '@property' },
+    ['@lsp.type.boolean.toml'] = { link = '@boolean' },
+    ['@lsp.type.offsetDateTime.toml'] = { link = '@string.special' },
+    ['@lsp.type.localDateTime.toml'] = { link = '@string.special' },
+    ['@lsp.type.localDate.toml'] = { link = '@string.special' },
+    ['@lsp.type.localTime.toml'] = { link = '@string.special' },
+
     -- LSP semantic token modifier overrides
     ['@lsp.mod.deprecated'] = { strikethrough = true },
     ['@lsp.mod.readonly'] = { link = '@constant' },

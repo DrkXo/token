@@ -1511,6 +1511,10 @@ end
 local style_reach = {
   functions = { underline = true },
   types = { underline = true },
+  variables = { italic = true },
+  properties = { italic = false, bold = true },
+  booleans = { strikethrough = true },
+  strings = { undercurl = true },
 }
 token.setup({ styles = style_reach })
 for _, background in ipairs({ 'dark', 'light' }) do
@@ -1637,6 +1641,103 @@ equal(loaded('gitsigns'), false, 'gitsigns loaded by default')
 equal(loaded('snacks'), false, 'snacks loaded by default')
 equal(loaded('telescope'), false, 'telescope loaded by default')
 equal(loaded('sidekick'), false, 'sidekick loaded by default')
+
+-- Provider extensions inherit semantic styling without leaking into other filetypes.
+local provider_links = {
+  ['@lsp.type.selfParameter.python'] = '@variable.parameter.builtin',
+  ['@lsp.type.clsParameter.python'] = '@variable.parameter.builtin',
+  ['@lsp.type.table.toml'] = '@property',
+  ['@lsp.type.key.toml'] = '@property',
+  ['@lsp.type.boolean.toml'] = '@boolean',
+  ['@lsp.type.offsetDateTime.toml'] = '@string.special',
+  ['@lsp.type.localDateTime.toml'] = '@string.special',
+  ['@lsp.type.localDate.toml'] = '@string.special',
+  ['@lsp.type.localTime.toml'] = '@string.special',
+}
+local provider_styles = {
+  ['@variable.parameter.builtin'] = { italic = true },
+  ['@property'] = { italic = false, bold = true },
+  ['@boolean'] = { strikethrough = true },
+  ['@string.special'] = { undercurl = true },
+}
+for _, styled in ipairs({ false, true }) do
+  token.setup(styled and { styles = style_reach } or {})
+  for _, appearance in ipairs(appearances) do
+    for _, background in ipairs({ 'dark', 'light' }) do
+      load(background, appearance.name)
+      local _, groups = require('token.theme').build(background, appearance.name)
+      for name, target in pairs(provider_links) do
+        local label = name .. ' in ' .. appearance.name .. ' ' .. background
+        equal(groups[name], { link = target }, label .. ' direct link')
+        truthy(not vim.tbl_isempty(hl(name)), label .. ' empty styling')
+        equal(hl(name), hl(target), label .. ' semantic styling')
+        if styled then
+          for attribute, enabled in pairs(provider_styles[target]) do
+            equal(hl(name)[attribute], enabled or nil, label .. ' user style ' .. attribute)
+          end
+        end
+        local unqualified = name:gsub('%.[^.]+$', '')
+        equal(groups[unqualified], nil, label .. ' unqualified definition')
+        equal(groups[unqualified .. '.lua'], nil, label .. ' leaked filetype definition')
+      end
+      for name in pairs(groups) do
+        for _, modifier in ipairs({ 'builtin', 'classMember', 'parameter', 'global' }) do
+          truthy(
+            not name:match('^@lsp%.mod%.' .. modifier .. '$')
+              and not name:match('^@lsp%.mod%.' .. modifier .. '%.')
+              and not name:match('^@lsp%.typemod%.[^.]+%.' .. modifier .. '$')
+              and not name:match('^@lsp%.typemod%.[^.]+%.' .. modifier .. '%.'),
+            'neutral modifier defined: ' .. name
+          )
+        end
+      end
+    end
+  end
+end
+
+-- Targets, direct overrides, callbacks, and gates retain their existing precedence.
+for _, mode in ipairs({ 'target', 'alias', 'callback', 'gated', 'gated-target' }) do
+  local overrides = {}
+  for name, target in pairs(provider_links) do
+    overrides[target] = { fg = '#123456', italic = true }
+    if mode ~= 'target' and mode ~= 'gated-target' then
+      overrides[name] = { fg = '#654321', bold = true }
+    end
+  end
+  token.setup({
+    styles = style_reach,
+    highlights = { all = overrides },
+    on_highlights = (mode == 'callback' or mode == 'gated') and function(groups)
+      for name in pairs(provider_links) do
+        groups[name] = { fg = '#abcdef', bold = true, italic = true, underline = true }
+      end
+    end or nil,
+    attributes = (mode == 'gated' or mode == 'gated-target') and { bold = false, italic = false, underline = false }
+      or {},
+  })
+  for _, appearance in ipairs(appearances) do
+    for _, background in ipairs({ 'dark', 'light' }) do
+      load(background, appearance.name)
+      for name in pairs(provider_links) do
+        local expected = mode == 'target' and { fg = tonumber('123456', 16), italic = true }
+          or mode == 'alias' and { fg = tonumber('654321', 16), bold = true }
+          or mode == 'callback' and { fg = tonumber('abcdef', 16), bold = true, italic = true, underline = true }
+          or mode == 'gated-target' and { fg = tonumber('123456', 16) }
+          or { fg = tonumber('abcdef', 16) }
+        if mode == 'target' then
+          expected.cterm = { italic = true }
+        elseif mode == 'alias' then
+          expected.cterm = { bold = true }
+        elseif mode == 'callback' then
+          expected.cterm = { bold = true, italic = true, underline = true }
+        end
+        equal(hl(name), expected, mode .. ' precedence for ' .. name .. ' in ' .. appearance.name .. ' ' .. background)
+      end
+    end
+  end
+end
+token.setup({})
+load()
 
 -- Sidekick preserves upstream semantic links across every appearance and variant.
 local sidekick_links = {
@@ -2316,6 +2417,9 @@ local function parity(config, label)
     expected[appearance.name] = {}
     for _, background in ipairs({ 'dark', 'light' }) do
       local _, groups = require('token.theme').build(background, appearance.name)
+      for name in pairs(provider_links) do
+        truthy(groups[name], label .. ' provider group missing: ' .. name)
+      end
       if label == 'all-plugin' then
         for name, target in pairs(sidekick_links) do
           equal(groups[name], { link = target }, 'all-plugin Sidekick link for ' .. name)

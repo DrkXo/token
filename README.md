@@ -213,6 +213,12 @@ inherited styling with attribute overrides.
 Unknown options, style categories, attributes, and plugin names are rejected
 with a `token:` error.
 
+## LSP semantic tokens
+
+Token supports standard LSP semantic tokens and additional Python and TOML
+tokens from BasedPyright and Tombi. These inherit Token's existing semantic
+colors and styles across all appearances.
+
 ## Compilation
 
 Token works out of the box without compilation. For faster startup, you can

@@ -229,6 +229,7 @@ local gtk_roles = {
   ['def:link-destination'] = 'link',
   ['def:link-text'] = 'link',
   ['def:list-marker'] = 'control',
+  ['def:inline-code'] = 'regular',
   ['def:strong-emphasis'] = 'strong',
   ['def:emphasis'] = 'emphasis',
 }

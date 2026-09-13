@@ -854,6 +854,15 @@ for _, appearance in ipairs(require('token.appearance').all()) do
     truthy(gtk:find('name="def:keyword"[^>]*bold="true"'), 'GtkSourceView keyword typography ' .. label)
     truthy(gtk:find('name="def:comment"[^>]*italic="true"'), 'GtkSourceView comment typography ' .. label)
     truthy(not gtk:find('name="def:function"[^>]*bold="true"'), 'GtkSourceView definition typography ' .. label)
+    local gtk_inline_code = gtk:match('name="def:inline%-code"[^>]*')
+    truthy(gtk_inline_code, 'GtkSourceView inline-code style ' .. label)
+    for attribute, enabled in pairs(typography.attributes('regular')) do
+      equal(
+        gtk_inline_code:match(attribute .. '="([^"]+)"'),
+        enabled and (attribute == 'underline' and 'single' or 'true') or nil,
+        'GtkSourceView inline-code ' .. attribute .. ' typography ' .. label
+      )
+    end
     truthy(
       gtk:find('name="def:keyword"[^>]*foreground="' .. expected.control .. '"'),
       'GtkSourceView keyword color ' .. label
@@ -1081,6 +1090,25 @@ local helper_ok, helper_error = xpcall(function()
   fails('safe relative path', function()
     gen_lib.write_if_changed('/tmp/token-output', 'changed', false)
   end)
+
+  -- Cache allocation failures must stop both targets before Neovim starts.
+  equal(vim.fn.writefile(vim.split(read_text('Makefile'), '\n'), 'Makefile'), 0)
+  equal(vim.fn.writefile({ '#!/bin/sh', 'exit 73' }, 'bin/mktemp'), 0)
+  equal(vim.fn.writefile({ '#!/bin/sh', 'touch nvim-started' }, 'bin/nvim'), 0)
+  for _, command in ipairs({ 'mktemp', 'nvim' }) do
+    truthy(vim.uv.fs_chmod('bin/' .. command, tonumber('755', 8)), 'failed to prepare ' .. command .. ' fixture')
+  end
+  for _, target in ipairs({ 'test', 'benchmark' }) do
+    local result = vim
+      .system({ 'make', target }, {
+        env = { PATH = temporary .. '/bin:' .. original_path, MAKEFLAGS = '' },
+        text = true,
+      })
+      :wait()
+    truthy(result.code ~= 0, target .. ' ignored cache allocation failure')
+    truthy(result.stderr:find('Error 73', 1, true), target .. ' did not preserve mktemp failure')
+    equal(vim.uv.fs_stat('nvim-started'), nil, target .. ' started Neovim after cache allocation failure')
+  end
 end, debug.traceback)
 vim.fn.chdir(previous_cwd)
 equal(vim.fn.delete(temporary, 'rf'), 0, 'failed to remove generated-output fixtures')

@@ -61,7 +61,7 @@
     <style name="def:list-marker" foreground="#E7CDFF" bold="true"/>
     <style name="def:strong-emphasis" bold="true"/>
     <style name="def:emphasis" italic="true"/>
-    <style name="def:inline-code" foreground="#5CC1B3" italic="true"/>
+    <style name="def:inline-code" foreground="#5CC1B3"/>
     <style name="def:underlined" underline="single"/>
     <style name="def:deletion" foreground="#E3888C"/>
     <style name="def:insertion" foreground="#5EC4B5"/>

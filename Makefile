@@ -10,11 +10,11 @@ all: format lint contrib
 check: format-check lint test contrib-verify
 
 test:
-	@cache_dir="$$(mktemp -d)"; trap 'rm -rf "$$cache_dir"' EXIT; \
+	@cache_dir="$$(mktemp -d)" || exit $$?; trap 'rm -rf "$$cache_dir"' EXIT; \
 		cd "$(ROOT)" && XDG_CACHE_HOME="$$cache_dir" nvim --headless -u NONE -l "tests/headless.lua"
 
 benchmark:
-	@cache_dir="$$(mktemp -d)"; trap 'rm -rf "$$cache_dir"' EXIT; \
+	@cache_dir="$$(mktemp -d)" || exit $$?; trap 'rm -rf "$$cache_dir"' EXIT; \
 		cd "$(ROOT)" && XDG_CACHE_HOME="$$cache_dir" nvim --headless -u NONE -l "tests/benchmark.lua"
 
 # Install git hooks

@@ -401,10 +401,30 @@ for _, appearance in ipairs(require('token.appearance').all()) do
         false,
         'VS Code exact semantic underline for ' .. selector .. ' ' .. appearance.name .. ' ' .. variant
       )
-      if selector:match('^(type|class|enum|interface|struct|typeParameter|function|method)%.') then
+    end
+    for _, token_type in ipairs({
+      'type',
+      'class',
+      'enum',
+      'interface',
+      'struct',
+      'typeParameter',
+      'function',
+      'method',
+    }) do
+      local foreground = expected.definition
+      -- Classic definitions and Flint callables inherit their base token color.
+      if
+        appearance.name == 'token'
+        or (appearance.name == 'token-flint' and (token_type == 'function' or token_type == 'method'))
+      then
+        foreground = nil
+      end
+      for _, modifier in ipairs({ 'declaration', 'definition' }) do
+        local selector = token_type .. '.' .. modifier
         equal(
-          semantic.foreground,
-          appearance.name == 'token' and nil or expected.definition,
+          theme.semanticTokenColors[selector].foreground,
+          foreground,
           'VS Code exact semantic foreground for ' .. selector .. ' ' .. appearance.name .. ' ' .. variant
         )
       end

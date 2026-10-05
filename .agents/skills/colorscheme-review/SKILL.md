@@ -1,6 +1,10 @@
 ---
 name: colorscheme-review
-description: Perform a read-only, evidence-led audit of Token's palettes, runtime themes, integrations, generated contrib themes, and toolchain. Use for repository-wide colorscheme audits, not ordinary implementation or a narrow code review.
+description:
+  Performs a read-only, evidence-led audit of Token's palettes, runtime themes,
+  plugin integrations, generated contrib themes, and toolchain, and returns one
+  Markdown report. Use for repository-wide colorscheme audits, not for
+  ordinary implementation or a narrow code review.
 ---
 
 # Token Colorscheme Review
@@ -12,6 +16,13 @@ afterward, and return one Markdown report in the conversation.
 Use current code, registries, tests, and official upstream sources as the
 authority. Do not preserve a finding merely because an older checklist expected
 it.
+
+## Contents
+
+- [Establish the baseline](#establish-the-baseline)
+- [Audit coverage](#audit-coverage)
+- [Evidence and findings](#evidence-and-findings)
+- [Report structure](#report-structure)
 
 ## Establish the baseline
 

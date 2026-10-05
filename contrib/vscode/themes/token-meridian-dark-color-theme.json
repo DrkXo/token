@@ -582,98 +582,98 @@
     },
     "type.declaration": {
       "foreground": "#b991db",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "type.definition": {
       "foreground": "#b991db",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "class.declaration": {
       "foreground": "#b991db",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "class.definition": {
       "foreground": "#b991db",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "enum.declaration": {
       "foreground": "#b991db",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "enum.definition": {
       "foreground": "#b991db",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "interface.declaration": {
       "foreground": "#b991db",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "interface.definition": {
       "foreground": "#b991db",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "struct.declaration": {
       "foreground": "#b991db",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "struct.definition": {
       "foreground": "#b991db",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "typeParameter.declaration": {
       "foreground": "#b991db",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "typeParameter.definition": {
       "foreground": "#b991db",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "function.declaration": {
       "foreground": "#b991db",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "function.definition": {
       "foreground": "#b991db",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "method.declaration": {
       "foreground": "#b991db",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "method.definition": {
       "foreground": "#b991db",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "*.declaration": {

@@ -160,6 +160,7 @@ local pi_vars = {
   yellow = 'yellow',
   purple = 'purple',
   cyan = 'cyan',
+  orange = 'orange',
   selection = 'sel',
   diffAdd = 'diff_add',
   diffDel = 'diff_del',
@@ -205,7 +206,7 @@ local pi_colors = {
   syntaxFunction = 'accent',
   syntaxVariable = 'fg0',
   syntaxString = 'green',
-  syntaxNumber = 'purple',
+  syntaxNumber = 'orange',
   syntaxType = 'blue',
   syntaxOperator = 'fg1',
   syntaxPunctuation = 'fg1',
@@ -317,6 +318,41 @@ local typography = require('token.typography')
 local typography_valid, typography_error = typography.validate()
 truthy(typography_valid, 'duplicate runtime typography mapping: ' .. (typography_error or 'unknown'))
 
+-- Every appearance shares Token Ultra's final runtime typography, including plugin groups.
+local function final_attributes(background, colorscheme)
+  local _, groups = require('token.theme').build(background, colorscheme)
+  local result = {}
+  for name in pairs(groups) do
+    local group, seen = groups[name], {}
+    while group and group.link and not seen[group.link] do
+      seen[group.link] = true
+      group = groups[group.link]
+    end
+    local attributes = {}
+    for _, attribute in ipairs({ 'bold', 'italic', 'underline', 'undercurl', 'strikethrough' }) do
+      attributes[attribute] = group and group[attribute] or nil
+    end
+    result[name] = attributes
+  end
+  return result
+end
+
+token.setup({ plugins = { all = true } })
+for _, background in ipairs({ 'dark', 'light' }) do
+  local expected = final_attributes(background, 'token-ultra')
+  for _, appearance in ipairs(appearances) do
+    local actual = final_attributes(background, appearance.name)
+    for _, name in ipairs(sorted_keys(vim.tbl_extend('force', {}, expected, actual))) do
+      equal(
+        actual[name] or {},
+        expected[name] or {},
+        appearance.name .. ' ' .. background .. ' typography differs from Token Ultra for ' .. name
+      )
+    end
+  end
+end
+token.setup()
+
 local function expected_semantic_colors(appearance, palette, variant)
   local profile = require('token.appearance').roles(appearance.name, palette, variant == 'dark')
   if profile then
@@ -337,21 +373,18 @@ local function expected_semantic_colors(appearance, palette, variant)
     }
   end
 
-  local is_temper = appearance.name == 'token-temper'
-  local is_variant = appearance.name == 'token-flint' or is_temper
-  local literal = is_temper and palette.accent or (is_variant and palette.green or palette.purple)
   return {
     comment = palette.fg2,
     control = palette.accent2,
     definition = palette.accent,
     call = palette.accent,
-    type = is_variant and palette.fg1 or palette.blue,
-    builtin = is_variant and palette.fg1 or palette.accent,
+    type = palette.blue,
+    builtin = palette.accent,
     property = palette.fg0,
-    string = is_temper and palette.accent or palette.green,
-    literal = literal,
-    number = is_temper and palette.accent or (is_variant and palette.green or palette.orange),
-    link = is_temper and palette.accent or palette.blue,
+    string = palette.green,
+    literal = palette.purple,
+    number = palette.orange,
+    link = palette.blue,
     heading = palette.accent,
   }
 end
@@ -413,11 +446,8 @@ for _, appearance in ipairs(require('token.appearance').all()) do
       'method',
     }) do
       local foreground = expected.definition
-      -- Classic definitions and Flint callables inherit their base token color.
-      if
-        appearance.name == 'token'
-        or (appearance.name == 'token-flint' and (token_type == 'function' or token_type == 'method'))
-      then
+      -- Classic definitions inherit their base token color.
+      if appearance.name == 'token' then
         foreground = nil
       end
       for _, modifier in ipairs({ 'declaration', 'definition' }) do
@@ -906,13 +936,7 @@ for _, appearance in ipairs(require('token.appearance').all()) do
     )
     for _, style in ipairs({ 'number', 'decimal', 'base-n-integer', 'floating-point', 'complex' }) do
       truthy(
-        gtk:find(
-          'name="def:'
-            .. vim.pesc(style)
-            .. '"[^>]*foreground="'
-            .. (profile and expected.number or expected.literal)
-            .. '"'
-        ),
+        gtk:find('name="def:' .. vim.pesc(style) .. '"[^>]*foreground="' .. expected.number .. '"'),
         'GtkSourceView ' .. style .. ' color ' .. label
       )
     end
@@ -2270,6 +2294,16 @@ equal(
   10,
   'cache paths collide'
 )
+local cache_dir = vim.fn.stdpath('cache') .. '/token'
+local other_config_cache = cache_dir .. '/dark-' .. string.rep('0', 16) .. '.lua'
+local unrelated_cache_file = cache_dir .. '/notes.lua'
+vim.fn.writefile({ 'other configuration' }, other_config_cache)
+vim.fn.writefile({ 'unrelated' }, unrelated_cache_file)
+compile.compile()
+equal(vim.uv.fs_stat(other_config_cache), nil, 'compile kept a cache for another configuration')
+truthy(vim.uv.fs_stat(unrelated_cache_file), 'compile removed a file it did not write')
+assert(os.remove(unrelated_cache_file))
+equal(#vim.fn.glob(cache_dir .. '/*.lua', false, true), 10, 'compile left extra caches')
 fail_flint_compile = true
 local compile_ok, compile_error = pcall(compile.compile)
 equal(compile_ok, false, 'injected Flint compilation unexpectedly succeeded')

@@ -12,7 +12,7 @@ local appearances = {
     slug = 'token-flint',
     cache_prefix = 'flint-',
     palette = 'token.palettes.flint',
-    highlights = 'token.appearances.flint',
+    roles = 'token.appearances.flint_roles',
   },
   ['token-temper'] = {
     name = 'token-temper',
@@ -20,7 +20,7 @@ local appearances = {
     slug = 'token-temper',
     cache_prefix = 'temper-',
     palette = 'token.palettes.temper',
-    highlights = 'token.appearances.temper',
+    roles = 'token.appearances.temper_roles',
   },
   ['token-ultra'] = {
     name = 'token-ultra',
@@ -28,7 +28,6 @@ local appearances = {
     slug = 'token-ultra',
     cache_prefix = 'ultra-',
     palette = 'token.palettes.ultra',
-    highlights = 'token.appearances.ultra',
     roles = 'token.appearances.ultra_roles',
   },
   ['token-meridian'] = {
@@ -37,7 +36,6 @@ local appearances = {
     slug = 'token-meridian',
     cache_prefix = 'meridian-',
     palette = 'token.palettes.meridian',
-    highlights = 'token.appearances.meridian',
     roles = 'token.appearances.meridian_roles',
   },
 }

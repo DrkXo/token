@@ -20,6 +20,7 @@
     "yellow": "#2f75c6",
     "purple": "#7a1f7a",
     "cyan": "#095b62",
+    "orange": "#4b1fa3",
     "selection": "#dedbd3",
     "diffAdd": "#daf6d5",
     "diffDel": "#ffdada"

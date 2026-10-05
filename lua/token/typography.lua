@@ -63,10 +63,6 @@ local groups = {
     '@markup.environment',
     '@markup.raw',
     '@markup.raw.block',
-    '@lsp.mod.declaration',
-    '@lsp.mod.definition',
-    '@lsp.mod.defaultLibrary',
-    '@lsp.mod.modification',
   },
   control = {
     'Statement',

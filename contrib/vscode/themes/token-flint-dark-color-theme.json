@@ -449,44 +449,44 @@
   "semanticTokenColors": {
     "class": {
       "foreground": "#A2A9AF",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "enum": {
       "foreground": "#A2A9AF",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "interface": {
       "foreground": "#A2A9AF",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "struct": {
       "foreground": "#A2A9AF",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "type": {
       "foreground": "#A2A9AF",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "typeParameter": {
       "foreground": "#A2A9AF",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "namespace": {
       "foreground": "#A2A9AF",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "function": {
@@ -568,16 +568,7 @@
       "italic": true
     },
     "*.defaultLibrary": {
-      "italic": false,
-      "bold": false,
-      "underline": false
-    },
-    "*.declaration": {
-      "bold": false,
-      "italic": false,
-      "underline": false
-    },
-    "*.definition": {
+      "foreground": "#A2A9AF",
       "bold": false,
       "italic": false,
       "underline": false
@@ -654,6 +645,40 @@
       "italic": false,
       "underline": false
     },
+    "function.declaration": {
+      "foreground": "#EB9E83",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "function.definition": {
+      "foreground": "#EB9E83",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "method.declaration": {
+      "foreground": "#EB9E83",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "method.definition": {
+      "foreground": "#EB9E83",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "*.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "*.definition": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
     "*.modification": {
       "bold": false,
       "italic": false,
@@ -694,32 +719,12 @@
       "italic": false,
       "underline": false
     },
-    "function.declaration": {
-      "bold": false,
-      "italic": false,
-      "underline": false
-    },
-    "function.definition": {
-      "bold": false,
-      "italic": false,
-      "underline": false
-    },
     "macro.declaration": {
       "bold": false,
       "italic": false,
       "underline": false
     },
     "macro.definition": {
-      "bold": false,
-      "italic": false,
-      "underline": false
-    },
-    "method.declaration": {
-      "bold": false,
-      "italic": false,
-      "underline": false
-    },
-    "method.definition": {
       "bold": false,
       "italic": false,
       "underline": false

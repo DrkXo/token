@@ -20,6 +20,7 @@
     "yellow": "#b99d4a",
     "purple": "#b195ca",
     "cyan": "#7dbbba",
+    "orange": "#d6924c",
     "selection": "#3a3a37",
     "diffAdd": "#1e3524",
     "diffDel": "#3c2024"
@@ -65,7 +66,7 @@
     "syntaxFunction": "accent",
     "syntaxVariable": "fg0",
     "syntaxString": "green",
-    "syntaxNumber": "purple",
+    "syntaxNumber": "orange",
     "syntaxType": "blue",
     "syntaxOperator": "fg1",
     "syntaxPunctuation": "fg1",

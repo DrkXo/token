@@ -449,44 +449,44 @@
   "semanticTokenColors": {
     "class": {
       "foreground": "#A2A9AF",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "enum": {
       "foreground": "#A2A9AF",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "interface": {
       "foreground": "#A2A9AF",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "struct": {
       "foreground": "#A2A9AF",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "type": {
       "foreground": "#A2A9AF",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "typeParameter": {
       "foreground": "#A2A9AF",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "namespace": {
       "foreground": "#A2A9AF",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "function": {
@@ -515,32 +515,32 @@
     },
     "string": {
       "foreground": "#5CC1B3",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "number": {
       "foreground": "#5CC1B3",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "enumMember": {
       "foreground": "#5CC1B3",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "variable.readonly": {
       "foreground": "#5CC1B3",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "property.readonly": {
       "foreground": "#5CC1B3",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "parameter": {
@@ -554,8 +554,8 @@
     },
     "*.readonly": {
       "foreground": "#5CC1B3",
-      "italic": false,
       "bold": false,
+      "italic": false,
       "underline": false
     },
     "*.async": {
@@ -569,16 +569,6 @@
     },
     "*.defaultLibrary": {
       "foreground": "#A2A9AF",
-      "italic": false,
-      "bold": false,
-      "underline": false
-    },
-    "*.declaration": {
-      "bold": false,
-      "italic": false,
-      "underline": false
-    },
-    "*.definition": {
       "bold": false,
       "italic": false,
       "underline": false
@@ -675,6 +665,16 @@
     },
     "method.definition": {
       "foreground": "#5CC1B3",
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "*.declaration": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "*.definition": {
       "bold": false,
       "italic": false,
       "underline": false

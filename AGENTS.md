@@ -7,8 +7,8 @@ compilation, and contrib contract.
 ## Architecture and sources of truth
 
 - `lua/token/appearance.lua` registers appearances and selects their palette,
-  optional highlight overlay, optional role profile, generated slug, and cache
-  identity.
+  optional role profile, generated slug, and cache identity. An appearance with
+  a role profile gets the shared highlight overlay in `appearances/overlay.lua`.
 - The registered palette modules are the canonical colors for runtime
   highlights and generated themes. Every palette exposes the same flat semantic
   key set for dark and light; some keys are consumed only by terminal, Lualine,
@@ -28,8 +28,8 @@ compilation, and contrib contract.
 
 ## Change conventions
 
-- Add an appearance through the registry, dark/light palette, optional
-  appearance and role modules, matching `colors/` entry point, and Lualine
+- Add an appearance through the registry, dark/light palette, optional role
+  module, matching `colors/` entry point, and Lualine
   wrapper. Keep generators and tests registry-driven.
 - Add plugin support with a `groups/plugins/<name>.lua` module and matching
   registry entry. Group modules export
@@ -40,7 +40,7 @@ compilation, and contrib contract.
   tuning.
 - For shared semantic font attributes, change `typography.lua` and verify user
   styles still win, including higher-priority LSP type-modifier groups. For
-  appearance-specific color grammar, change its appearance or role module and
+  appearance-specific color grammar, change its role module and
   verify syntax, Lualine, ANSI, and generated outputs.
 - Do not change established palette values or intentional dark/light differences
   during unrelated work. Visual palette changes require an explicit request and
@@ -48,6 +48,9 @@ compilation, and contrib contract.
   evidence.
 - Never hand-edit generated `contrib/**` theme files. Change palette,
   typography, role, or generator sources, then regenerate.
+- Project agent skills live in `.agents/skills/` and serve Codex and Claude
+  Code. `.claude/skills/<name>` is a symlink to the same directory, so keep
+  skill text agent-neutral and add a link for each new skill.
 
 ## Validation
 

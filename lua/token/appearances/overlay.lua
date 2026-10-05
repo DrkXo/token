@@ -1,26 +1,27 @@
 ---@param definition table
----@param extra? table
 ---@return table
-local function copy(definition, extra)
+local function copy(definition)
   local result = {}
   for key, value in pairs(definition) do
-    result[key] = value
-  end
-  for key, value in pairs(extra or {}) do
     result[key] = value
   end
   return result
 end
 
+---Role-driven highlight overlay shared by every appearance with a role profile.
+---Roles supply colors only; `token.typography` owns font attributes.
 ---@param p TokenPalette
----@param roles? table
+---@param roles table
 ---@return table<string, vim.api.keyset.highlight>
-local function ultra(p, roles)
-  roles = roles or require('token.appearances.ultra_roles')(p, false)
+local function overlay(p, roles)
   local r = roles.syntax
   local number = r.number or r.literal
   local property = r.property or r.variable
   local special = r.special or r.literal
+  local exception = r.exception or r.control
+  local tag_attribute = r.tag_attribute or r.attribute
+  local path = r.path or { fg = p.blue }
+  local note = r.note or { fg = p.blue }
   local groups = {
     Comment = copy(r.comment),
     Constant = copy(r.literal),
@@ -37,7 +38,7 @@ local function ultra(p, roles)
     Label = copy(r.control),
     Operator = copy(r.operator),
     Keyword = copy(r.control),
-    Exception = copy(r.control),
+    Exception = copy(exception),
     PreProc = copy(r.control),
     Include = copy(r.control),
     Define = copy(r.control),
@@ -52,7 +53,7 @@ local function ultra(p, roles)
     Tag = copy(r.tag),
     Delimiter = copy(r.punctuation),
     SpecialComment = copy(r.comment),
-    Debug = copy(r.control),
+    Debug = copy(exception),
   }
 
   local overrides = {
@@ -72,7 +73,7 @@ local function ultra(p, roles)
     ['@string.escape'] = copy(r.literal),
     ['@string.special'] = copy(r.literal),
     ['@string.special.symbol'] = copy(r.literal),
-    ['@string.special.path'] = { fg = p.blue },
+    ['@string.special.path'] = copy(path),
     ['@string.special.url'] = copy(r.link),
     ['@character'] = copy(r.literal),
     ['@character.special'] = copy(r.literal),
@@ -99,10 +100,10 @@ local function ultra(p, roles)
     ['@punctuation.special'] = copy(r.punctuation),
     ['@comment'] = copy(r.comment),
     ['@comment.documentation'] = copy(r.comment),
-    ['@comment.error'] = { fg = p.red, italic = true },
-    ['@comment.warning'] = { fg = p.yellow, italic = true },
-    ['@comment.todo'] = { fg = p.yellow, italic = true },
-    ['@comment.note'] = { fg = p.blue, italic = true },
+    ['@comment.error'] = { fg = p.red },
+    ['@comment.warning'] = { fg = p.yellow },
+    ['@comment.todo'] = { fg = p.yellow },
+    ['@comment.note'] = copy(note),
     ['@keyword'] = copy(r.control),
     ['@keyword.coroutine'] = copy(r.control),
     ['@keyword.function'] = copy(r.control),
@@ -112,23 +113,23 @@ local function ultra(p, roles)
     ['@keyword.modifier'] = copy(r.control),
     ['@keyword.repeat'] = copy(r.control),
     ['@keyword.return'] = copy(r.control),
-    ['@keyword.debug'] = copy(r.control),
-    ['@keyword.exception'] = copy(r.control),
+    ['@keyword.debug'] = copy(exception),
+    ['@keyword.exception'] = copy(exception),
     ['@keyword.conditional'] = copy(r.control),
     ['@keyword.conditional.ternary'] = copy(r.control),
     ['@keyword.directive'] = copy(r.control),
     ['@keyword.directive.define'] = copy(r.control),
     ['@tag'] = copy(r.tag),
     ['@tag.builtin'] = copy(r.builtin),
-    ['@tag.attribute'] = copy(r.attribute),
+    ['@tag.attribute'] = copy(tag_attribute),
     ['@tag.delimiter'] = copy(r.tag_delimiter),
-    ['@markup.heading'] = { fg = roles.headings[1], bold = true },
-    ['@markup.heading.1'] = { fg = roles.headings[1], bold = true },
-    ['@markup.heading.2'] = { fg = roles.headings[2], bold = true },
-    ['@markup.heading.3'] = { fg = roles.headings[3], bold = true },
-    ['@markup.heading.4'] = { fg = roles.headings[4], bold = true },
-    ['@markup.heading.5'] = { fg = roles.headings[5], bold = true },
-    ['@markup.heading.6'] = { fg = roles.headings[6], bold = true },
+    ['@markup.heading'] = { fg = roles.headings[1] },
+    ['@markup.heading.1'] = { fg = roles.headings[1] },
+    ['@markup.heading.2'] = { fg = roles.headings[2] },
+    ['@markup.heading.3'] = { fg = roles.headings[3] },
+    ['@markup.heading.4'] = { fg = roles.headings[4] },
+    ['@markup.heading.5'] = { fg = roles.headings[5] },
+    ['@markup.heading.6'] = { fg = roles.headings[6] },
     ['@markup.quote'] = copy(r.quote),
     ['@markup.math'] = copy(r.type),
     ['@markup.environment'] = copy(r.type),
@@ -182,4 +183,4 @@ local function ultra(p, roles)
   return groups
 end
 
-return ultra
+return overlay

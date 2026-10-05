@@ -4,9 +4,9 @@ local function treesitter(p)
   return {
     -- Variables
     ['@variable'] = { fg = p.fg0 },
-    ['@variable.builtin'] = { fg = p.accent2, italic = true },
+    ['@variable.builtin'] = { fg = p.accent2 },
     ['@variable.parameter'] = { fg = p.fg1 },
-    ['@variable.parameter.builtin'] = { fg = p.accent2, italic = true },
+    ['@variable.parameter.builtin'] = { fg = p.accent2 },
     ['@variable.member'] = { fg = p.fg0 },
 
     -- Constants
@@ -69,7 +69,7 @@ local function treesitter(p)
     ['@comment.documentation'] = { fg = p.fg2, italic = true },
     ['@comment.error'] = { fg = p.red, italic = true },
     ['@comment.warning'] = { fg = p.yellow, italic = true },
-    ['@comment.todo'] = { fg = p.yellow, bold = true },
+    ['@comment.todo'] = { fg = p.yellow },
     ['@comment.note'] = { fg = p.blue, italic = true },
 
     -- Keywords
@@ -79,7 +79,7 @@ local function treesitter(p)
     ['@keyword.operator'] = { fg = p.accent2 },
     ['@keyword.import'] = { link = 'Include' },
     ['@keyword.type'] = { fg = p.accent2 },
-    ['@keyword.modifier'] = { fg = p.accent2, italic = true },
+    ['@keyword.modifier'] = { fg = p.accent2 },
     ['@keyword.repeat'] = { link = 'Repeat' },
     ['@keyword.return'] = { fg = p.accent2 },
     ['@keyword.debug'] = { fg = p.red },
@@ -92,7 +92,7 @@ local function treesitter(p)
     -- HTML / JSX / XML tags
     ['@tag'] = { fg = p.purple },
     ['@tag.builtin'] = { fg = p.purple },
-    ['@tag.attribute'] = { fg = p.accent2, italic = true },
+    ['@tag.attribute'] = { fg = p.accent2 },
     ['@tag.delimiter'] = { fg = p.fg2 },
 
     -- Markup (markdown etc.)

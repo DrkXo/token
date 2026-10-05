@@ -271,9 +271,9 @@ function M.build(background, colorscheme)
   local appearance = require('token.appearance').get(colorscheme)
   local p = M.palette(background, appearance.name)
   local groups = require('token.groups')(p, config.plugins)
-  if appearance.highlights then
-    local roles = require('token.appearance').roles(appearance.name, p, background == 'dark')
-    for name, hl in pairs(require(appearance.highlights)(p, roles)) do
+  local roles = require('token.appearance').roles(appearance.name, p, background == 'dark')
+  if roles then
+    for name, hl in pairs(require('token.appearances.overlay')(p, roles)) do
       if groups[name] or name:match('^@lsp%.typemod%.') then
         groups[name] = hl
       end

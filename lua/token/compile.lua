@@ -207,9 +207,20 @@ function M.compile()
     error(err)
   end
 
+  local current = {}
   for _, pair in ipairs(pending) do
     assert(vim.uv.fs_rename(pair[1], pair[2]))
     loaded_caches[pair[2]] = nil
+    current[pair[2]] = true
+  end
+
+  -- Keep only this configuration's caches; other configurations fall back to
+  -- the dynamic path until they are compiled again.
+  for _, name in ipairs(vim.fn.readdir(dir)) do
+    local path = dir .. '/' .. name
+    if not current[path] and name:match('%-' .. string.rep('%x', 16) .. '%.lua$') then
+      discard(path)
+    end
   end
 
   vim.notify(

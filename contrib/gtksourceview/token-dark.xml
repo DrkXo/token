@@ -24,12 +24,12 @@
     <style name="def:doc-comment-element" foreground="#a19c94" italic="true"/>
     <style name="def:constant" foreground="#b195ca"/>
     <style name="def:special-constant" foreground="#b195ca"/>
-    <style name="def:number" foreground="#b195ca"/>
-    <style name="def:decimal" foreground="#b195ca"/>
-    <style name="def:base-n-integer" foreground="#b195ca"/>
-    <style name="def:floating-point" foreground="#b195ca"/>
-    <style name="def:complex" foreground="#b195ca"/>
-    <style name="def:boolean" foreground="#f7c699"/>
+    <style name="def:number" foreground="#d6924c"/>
+    <style name="def:decimal" foreground="#d6924c"/>
+    <style name="def:base-n-integer" foreground="#d6924c"/>
+    <style name="def:floating-point" foreground="#d6924c"/>
+    <style name="def:complex" foreground="#d6924c"/>
+    <style name="def:boolean" foreground="#d6924c"/>
     <style name="def:character" foreground="#8fb78c"/>
     <style name="def:string" foreground="#8fb78c"/>
     <style name="def:special-char" foreground="#b195ca"/>

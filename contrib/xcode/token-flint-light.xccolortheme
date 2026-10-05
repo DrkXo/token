@@ -44,7 +44,7 @@
     <key>DVTMarkupTextEmphasisFont</key>
     <string>.AppleSystemUIFontItalic - 10.0</string>
     <key>DVTMarkupTextInlineCodeColor</key>
-    <string>0.274510 0.317647 0.364706 0.7</string>
+    <string>0.239216 0.349020 0.007843 0.7</string>
     <key>DVTMarkupTextLinkColor</key>
     <string>0.011765 0.325490 0.470588 1</string>
     <key>DVTMarkupTextLinkFont</key>
@@ -54,7 +54,7 @@
     <key>DVTMarkupTextNormalFont</key>
     <string>.AppleSystemUIFont - 10.0</string>
     <key>DVTMarkupTextOtherHeadingColor</key>
-    <string>0.254902 0.298039 0.341176 1</string>
+    <string>0.274510 0.317647 0.364706 1</string>
     <key>DVTMarkupTextOtherHeadingFont</key>
     <string>.AppleSystemUIFontBold - 14.0</string>
     <key>DVTMarkupTextPrimaryHeadingColor</key>

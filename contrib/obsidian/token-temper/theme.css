@@ -85,9 +85,9 @@
   --code-operator: #a2a9af;
   --code-property: #c3c8cc;
   --code-punctuation: #a2a9af;
-  --code-string: #5ec4b5;
-  --code-tag: #c294e6;
-  --code-value: #51b7aa;
+  --code-string: #5cc1b3;
+  --code-tag: #a2a9af;
+  --code-value: #5cc1b3;
 }
 
 .theme-light {
@@ -175,7 +175,7 @@
   --code-operator: #46515d;
   --code-property: #283039;
   --code-punctuation: #46515d;
-  --code-string: #005b53;
-  --code-tag: #612c8d;
-  --code-value: #004741;
+  --code-string: #005850;
+  --code-tag: #46515d;
+  --code-value: #005850;
 }

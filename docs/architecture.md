@@ -10,7 +10,8 @@ outputs so they can be verified together.
 [`lua/token/appearance.lua`](../lua/token/appearance.lua) is the registry and
 ordering authority for appearances. Each entry selects a palette module and
 identifiers used by runtime caches and generated files. An appearance may also
-select a highlight overlay and a semantic role profile. Every `colors/*.lua`
+select a semantic role profile, which applies the shared highlight overlay.
+Every `colors/*.lua`
 entry point delegates its registered name to
 [`require('token').load()`](../lua/token/init.lua).
 
@@ -50,11 +51,15 @@ validates that every required semantic key exists and every palette value is a
 `#RRGGBB` string.
 
 [`lua/token/typography.lua`](../lua/token/typography.lua) owns shared semantic
-attributes and format-specific role mappings. Optional appearance role modules
-under [`lua/token/appearances/`](../lua/token/appearances/) refine semantic
-colors used by appearance overlays, terminal and Lualine output, and generators.
-User styles are applied after shared and appearance typography, so supported
-customization can override those defaults before the final global gates.
+attributes and format-specific role mappings, so every appearance renders the
+same typography. Appearance role modules under
+[`lua/token/appearances/`](../lua/token/appearances/) supply colors only. The
+shared highlight overlay in
+[`overlay.lua`](../lua/token/appearances/overlay.lua), optional terminal and
+Lualine colors, and generator colors all derive from them. Classic Token has no role profile and uses the core
+groups and default generator mappings. User styles are applied after shared
+typography, so supported customization can override those defaults before the
+final global gates.
 
 ## Compiled runtime path
 
@@ -67,7 +72,8 @@ Git revision or, for mutable trees, metadata for `lua/token/**/*.lua`.
 Missing, stale, legacy, corrupt, or failing caches are discarded or ignored and
 the loader falls back to dynamic assembly. Compilation writes temporary files
 for the complete appearance set before promoting them to their final paths, so
-a failed build does not replace only part of the cache set.
+a failed build does not replace only part of the cache set. A successful build
+then removes caches for other configuration fingerprints.
 
 ## Generated contrib themes
 

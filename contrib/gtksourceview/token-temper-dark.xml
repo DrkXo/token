@@ -44,7 +44,7 @@
     <style name="def:error" foreground="#E3888C" bold="true"/>
     <style name="def:warning" foreground="#C5A15A"/>
     <style name="def:note" foreground="#51B8AA" bold="true"/>
-    <style name="def:net-address" foreground="#51B8AA" underline="single"/>
+    <style name="def:net-address" foreground="#5CC1B3" underline="single"/>
     <style name="def:heading" foreground="#5CC1B3" bold="true"/>
     <style name="def:heading0" foreground="#5CC1B3" bold="true"/>
     <style name="def:heading1" foreground="#5CC1B3" bold="true"/>
@@ -55,8 +55,8 @@
     <style name="def:heading6" foreground="#A2A9AF" bold="true"/>
     <style name="def:thematic-break" foreground="#9AA4AE" bold="true"/>
     <style name="def:preformatted-section" foreground="#C3C8CC" background="#22272E"/>
-    <style name="def:link-destination" foreground="#51B8AA" underline="single"/>
-    <style name="def:link-text" foreground="#51B8AA" underline="single"/>
+    <style name="def:link-destination" foreground="#5CC1B3" underline="single"/>
+    <style name="def:link-text" foreground="#5CC1B3" underline="single"/>
     <style name="def:link-symbol" foreground="#E7CDFF"/>
     <style name="def:list-marker" foreground="#E7CDFF" bold="true"/>
     <style name="def:strong-emphasis" bold="true"/>

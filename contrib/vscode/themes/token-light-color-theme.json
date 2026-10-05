@@ -147,14 +147,14 @@
       "name": "Boolean",
       "scope": "constant.language.boolean",
       "settings": {
-        "foreground": "#6d4717"
+        "foreground": "#613500"
       }
     },
     {
       "name": "Number",
       "scope": "constant.numeric",
       "settings": {
-        "foreground": "#573c72"
+        "foreground": "#613500"
       }
     },
     {
@@ -543,7 +543,7 @@
       "underline": false
     },
     "number": {
-      "foreground": "#573c72",
+      "foreground": "#613500",
       "bold": false,
       "italic": false,
       "underline": false
@@ -590,11 +590,6 @@
     "*.abstract": {
       "italic": true
     },
-    "*.defaultLibrary": {
-      "italic": false,
-      "bold": false,
-      "underline": false
-    },
     "*.declaration": {
       "bold": false,
       "italic": false,
@@ -606,6 +601,11 @@
       "underline": false
     },
     "*.modification": {
+      "bold": false,
+      "italic": false,
+      "underline": false
+    },
+    "*.defaultLibrary": {
       "bold": false,
       "italic": false,
       "underline": false

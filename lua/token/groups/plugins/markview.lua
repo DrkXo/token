@@ -2,7 +2,7 @@
 ---@return table<string, vim.api.keyset.highlight>
 local function markview(p)
   return {
-    -- markview.nvim palette (foundation, headings/callouts/checkboxes link here)
+    -- markview.nvim palette (foundation, callouts/checkboxes link here)
     MarkviewPalette0 = { fg = p.fg2, bg = p.bg4 },
     MarkviewPalette0Sign = { fg = p.fg2 },
     MarkviewPalette0Fg = { fg = p.fg2 },
@@ -58,18 +58,18 @@ local function markview(p)
     MarkviewIcon4 = { link = 'MarkviewPalette4Fg' },
     MarkviewIcon5 = { link = 'MarkviewPalette5Fg' },
     MarkviewIcon6 = { link = 'MarkviewPalette6Fg' },
-    MarkviewHeading1 = { link = 'MarkviewPalette1' },
-    MarkviewHeading1Sign = { link = 'MarkviewPalette1Sign' },
-    MarkviewHeading2 = { link = 'MarkviewPalette2' },
-    MarkviewHeading2Sign = { link = 'MarkviewPalette2Sign' },
-    MarkviewHeading3 = { link = 'MarkviewPalette3' },
-    MarkviewHeading3Sign = { link = 'MarkviewPalette3Sign' },
-    MarkviewHeading4 = { link = 'MarkviewPalette4' },
-    MarkviewHeading4Sign = { link = 'MarkviewPalette4Sign' },
-    MarkviewHeading5 = { link = 'MarkviewPalette5' },
-    MarkviewHeading5Sign = { link = 'MarkviewPalette5Sign' },
-    MarkviewHeading6 = { link = 'MarkviewPalette6' },
-    MarkviewHeading6Sign = { link = 'MarkviewPalette6Sign' },
+    MarkviewHeading1 = { fg = p.accent, bg = p.bg4, bold = true },
+    MarkviewHeading1Sign = { fg = p.accent, bold = true },
+    MarkviewHeading2 = { fg = p.accent2, bg = p.bg4, bold = true },
+    MarkviewHeading2Sign = { fg = p.accent2, bold = true },
+    MarkviewHeading3 = { fg = p.olive, bg = p.bg4, bold = true },
+    MarkviewHeading3Sign = { fg = p.olive, bold = true },
+    MarkviewHeading4 = { fg = p.blue, bg = p.bg4, bold = true },
+    MarkviewHeading4Sign = { fg = p.blue, bold = true },
+    MarkviewHeading5 = { fg = p.green, bg = p.bg4, bold = true },
+    MarkviewHeading5Sign = { fg = p.green, bold = true },
+    MarkviewHeading6 = { fg = p.purple, bg = p.bg4, bold = true },
+    MarkviewHeading6Sign = { fg = p.purple, bold = true },
 
     -- markview.nvim block quotes (override palette links for semantic colors)
     MarkviewBlockQuoteDefault = { fg = p.fg2 },

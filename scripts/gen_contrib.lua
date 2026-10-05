@@ -271,34 +271,26 @@ local function textmate_scope_rules(p, appearance, variant)
     local r = profile.syntax
     local number = r.number or r.literal
     local property = r.property or r.variable
-
-    local function style(role, attributes)
-      local result = {}
-      for _, attribute in ipairs(attributes) do
-        if role[attribute] then
-          result[#result + 1] = attribute
-        end
-      end
-      return #result > 0 and table.concat(result, ' ') or nil
-    end
+    local exception = r.exception or r.control
+    local tag_attribute = r.tag_attribute or r.attribute
 
     local rules = {
-      { 'Comment', 'comment, punctuation.definition.comment', r.comment.fg, style(r.comment, { 'italic' }) },
+      { 'Comment', 'comment, punctuation.definition.comment', r.comment.fg, nil },
       {
         'Keyword',
         'keyword, keyword.control, keyword.other, storage.modifier',
         r.control.fg,
-        style(r.control, { 'bold' }),
+        nil,
       },
       { 'Operator', 'keyword.operator', r.operator.fg, nil },
       {
         'Function definition',
         'entity.name.function, meta.function.definition entity.name',
         r.definition.fg,
-        style(r.definition, { 'bold' }),
+        nil,
       },
       { 'Function call', 'meta.function-call, variable.function', r.call.fg, nil },
-      { 'Built-in function', 'support.function', r.builtin.fg, style(r.builtin, { 'italic' }) },
+      { 'Built-in function', 'support.function', r.builtin.fg, nil },
       { 'String', 'string, punctuation.definition.string', r.literal.fg, nil },
       {
         'Literal',
@@ -311,19 +303,19 @@ local function textmate_scope_rules(p, appearance, variant)
         'Type definition',
         'entity.name.type, entity.name.class, entity.name.type.class',
         r.definition.fg,
-        style(r.definition, { 'bold' }),
+        nil,
       },
       {
         'Type reference',
         'storage.type, support.type, support.class, entity.other.inherited-class',
         r.type.fg,
-        style(r.type, { 'italic' }),
+        nil,
       },
       {
         'Module',
         'entity.name.namespace, entity.name.type.module, support.module',
         r.type.fg,
-        style(r.type, { 'italic' }),
+        nil,
       },
       {
         'Preprocessor',
@@ -336,23 +328,23 @@ local function textmate_scope_rules(p, appearance, variant)
       {
         'Tag attribute',
         'entity.other.attribute-name',
-        r.attribute.fg,
-        style(r.attribute, { 'italic' }),
+        tag_attribute.fg,
+        nil,
       },
       {
         'Attribute',
         'meta.annotation, storage.type.annotation',
         r.attribute.fg,
-        style(r.attribute, { 'italic' }),
+        nil,
       },
-      { 'Label', 'entity.name.label, constant.other.label', r.control.fg, style(r.control, { 'bold' }) },
-      { 'Built-in symbol', 'variable.language', r.builtin.fg, style(r.builtin, { 'italic' }) },
-      { 'Debug', 'keyword.other.debugger', r.control.fg, style(r.control, { 'bold' }) },
+      { 'Label', 'entity.name.label, constant.other.label', r.control.fg, nil },
+      { 'Built-in symbol', 'variable.language', r.builtin.fg, nil },
+      { 'Debug', 'keyword.other.debugger', exception.fg, nil },
       {
         'Exception',
         'keyword.control.exception, keyword.control.trycatch',
-        r.control.fg,
-        style(r.control, { 'bold' }),
+        exception.fg,
+        nil,
       },
       { 'Identifier', 'variable, support.variable, meta.definition.variable', r.variable.fg, nil },
       {
@@ -370,12 +362,12 @@ local function textmate_scope_rules(p, appearance, variant)
       { 'Heading 5', 'heading.5.markdown', profile.headings[5], 'bold' },
       { 'Heading 6', 'heading.6.markdown', profile.headings[6], 'bold' },
       { 'Heading delimiter', 'punctuation.definition.heading.markdown', r.comment.fg, nil },
-      { 'Markup link', 'markup.underline.link, string.other.link', r.link.fg, style(r.link, { 'underline' }) },
+      { 'Markup link', 'markup.underline.link, string.other.link', r.link.fg, nil },
       {
         'Markup link text',
         'string.other.link.title.markdown, constant.other.reference.link.markdown',
         r.link.fg,
-        style(r.link, { 'underline' }),
+        nil,
       },
       {
         'Markup code',
@@ -393,12 +385,12 @@ local function textmate_scope_rules(p, appearance, variant)
         'Markup list',
         'punctuation.definition.list.begin.markdown, markup.list',
         r.control.fg,
-        style(r.control, { 'bold' }),
+        nil,
       },
       { 'Markup bold', 'markup.bold', nil, 'bold' },
       { 'Markup italic', 'markup.italic', nil, 'italic' },
       { 'Markup bold italic', 'markup.bold markup.italic, markup.italic markup.bold', nil, 'italic bold' },
-      { 'Markup quote', 'markup.quote', r.quote.fg, style(r.quote, { 'italic' }) },
+      { 'Markup quote', 'markup.quote', r.quote.fg, nil },
       { 'Diff added', 'markup.inserted, meta.diff.header.to-file', p.green, nil },
       { 'Diff deleted', 'markup.deleted, meta.diff.header.from-file', p.red, nil },
       { 'Diff changed', 'markup.changed', p.yellow, nil },
@@ -412,87 +404,6 @@ local function textmate_scope_rules(p, appearance, variant)
       table.insert(rules, 9, { 'Number', 'constant.numeric, constant.language.boolean', number.fg, nil })
     end
     return rules
-  elseif appearance.name == 'token-flint' or appearance.name == 'token-temper' then
-    local is_temper = appearance.name == 'token-temper'
-    local literal = is_temper and p.accent or p.green
-    local literal_style = is_temper and 'italic' or nil
-    local link = is_temper and p.accent or p.blue
-    local exceptional = is_temper and p.accent2 or p.red
-    return {
-      { 'Comment', 'comment, punctuation.definition.comment', p.fg2, 'italic' },
-      { 'Keyword', 'keyword, keyword.control, keyword.other, storage.modifier', p.accent2, nil },
-      { 'Operator', 'keyword.operator', p.fg1, nil },
-      { 'Function definition', 'entity.name.function, meta.function.definition entity.name', p.accent, 'bold' },
-      { 'Function call', 'meta.function-call, variable.function', p.accent, nil },
-      { 'Built-in function', 'support.function', p.fg1, 'italic' },
-      { 'String', 'string, punctuation.definition.string', literal, literal_style },
-      { 'Literal', 'constant, constant.language, constant.numeric, variable.other.constant', literal, literal_style },
-      { 'Type definition', 'entity.name.type, entity.name.class, entity.name.type.class', p.accent, 'bold' },
-      {
-        'Type reference',
-        'storage.type, support.type, support.class, entity.other.inherited-class',
-        p.fg1,
-        'italic',
-      },
-      { 'Module', 'entity.name.namespace, entity.name.type.module, support.module', p.fg1, 'italic' },
-      {
-        'Preprocessor',
-        'keyword.control.import, keyword.control.export, keyword.control.directive, keyword.preprocessor, keyword.other.import, keyword.other.package, keyword.other.using',
-        p.accent2,
-        nil,
-      },
-      { 'Macro', 'entity.name.function.preprocessor', p.accent2, nil },
-      { 'Tag', 'entity.name.tag', p.fg1, nil },
-      { 'Tag attribute', 'entity.other.attribute-name', p.fg0, nil },
-      { 'Attribute', 'meta.annotation, storage.type.annotation', p.fg1, 'italic' },
-      { 'Label', 'entity.name.label, constant.other.label', p.accent2, nil },
-      { 'Built-in symbol', 'variable.language', p.fg1, 'italic' },
-      { 'Debug', 'keyword.other.debugger', exceptional, nil },
-      { 'Exception', 'keyword.control.exception, keyword.control.trycatch', exceptional, nil },
-      { 'Identifier', 'variable, support.variable, meta.definition.variable', p.fg0, nil },
-      {
-        'Property',
-        'variable.object.property, variable.other.property, variable.other.member, meta.object-literal.key',
-        p.fg0,
-        nil,
-      },
-      { 'Delimiter', 'punctuation, meta.brace, meta.delimiter, meta.bracket', p.fg1, nil },
-      { 'Parameter', 'variable.parameter', p.fg1, nil },
-      { 'Heading 1', 'heading.1.markdown, markup.heading.setext.1.markdown', p.accent, 'bold' },
-      { 'Heading 2', 'heading.2.markdown, markup.heading.setext.2.markdown', p.accent2, 'bold' },
-      { 'Heading 3', 'heading.3.markdown', p.fg1, 'bold' },
-      { 'Heading 4', 'heading.4.markdown', p.accent, 'bold' },
-      { 'Heading 5', 'heading.5.markdown', p.accent2, 'bold' },
-      { 'Heading 6', 'heading.6.markdown', p.fg1, 'bold' },
-      { 'Heading delimiter', 'punctuation.definition.heading.markdown', p.fg2, nil },
-      { 'Markup link', 'markup.underline.link, string.other.link', link, 'underline' },
-      {
-        'Markup link text',
-        'string.other.link.title.markdown, constant.other.reference.link.markdown',
-        link,
-        'underline',
-      },
-      {
-        'Markup code',
-        'markup.fenced_code.block.markdown, markup.inline.raw.string.markdown, markup.raw',
-        literal,
-        literal_style,
-      },
-      { 'Markup code delimiter', 'punctuation.definition.markdown, punctuation.definition.raw.markdown', p.fg2, nil },
-      { 'Markup list', 'punctuation.definition.list.begin.markdown, markup.list', p.accent2, nil },
-      { 'Markup bold', 'markup.bold', nil, 'bold' },
-      { 'Markup italic', 'markup.italic', nil, 'italic' },
-      { 'Markup bold italic', 'markup.bold markup.italic, markup.italic markup.bold', nil, 'italic bold' },
-      { 'Markup quote', 'markup.quote', p.fg2, 'italic' },
-      { 'Diff added', 'markup.inserted, meta.diff.header.to-file', p.green, nil },
-      { 'Diff deleted', 'markup.deleted, meta.diff.header.from-file', p.red, nil },
-      { 'Diff changed', 'markup.changed', p.yellow, nil },
-      { 'GitGutter inserted', 'markup.inserted.git_gutter', p.green, nil },
-      { 'GitGutter deleted', 'markup.deleted.git_gutter', p.red, nil },
-      { 'GitGutter changed', 'markup.changed.git_gutter', p.yellow, nil },
-      { 'GitGutter untracked', 'markup.untracked.git_gutter', p.fg3, nil },
-      { 'GitGutter ignored', 'markup.ignored.git_gutter', p.fg3, nil },
-    }
   end
   return {
     { 'Comment', 'comment, punctuation.definition.comment', p.fg2, 'italic' },
@@ -502,8 +413,8 @@ local function textmate_scope_rules(p, appearance, variant)
     { 'Function', 'entity.name.function, support.function, meta.function-call', p.accent, nil },
     { 'String', 'string, punctuation.definition.string', p.green, nil },
     { 'String escape', 'constant.character.escape', p.purple, nil },
-    { 'Boolean', 'constant.language.boolean', p.accent2, nil },
-    { 'Number', 'constant.numeric', p.purple, nil },
+    { 'Boolean', 'constant.language.boolean', p.orange, nil },
+    { 'Number', 'constant.numeric', p.orange, nil },
     { 'Constant', 'constant, constant.language, support.constant, variable.other.constant', p.purple, nil },
     { 'Type', 'storage.type, support.type, entity.name.type, entity.other.inherited-class', p.blue, nil },
     { 'Class', 'entity.name.type.class, support.class, entity.name.class', p.blue, nil },
@@ -724,12 +635,12 @@ local function gen_gtksourceview(p, variant, _term, appearance)
     { 'def:doc-comment-element', { fg = p.fg2, italic = true } },
     { 'def:constant', { fg = p.purple } },
     { 'def:special-constant', { fg = p.purple } },
-    { 'def:number', { fg = p.purple } },
-    { 'def:decimal', { fg = p.purple } },
-    { 'def:base-n-integer', { fg = p.purple } },
-    { 'def:floating-point', { fg = p.purple } },
-    { 'def:complex', { fg = p.purple } },
-    { 'def:boolean', { fg = p.accent2 } },
+    { 'def:number', { fg = p.orange } },
+    { 'def:decimal', { fg = p.orange } },
+    { 'def:base-n-integer', { fg = p.orange } },
+    { 'def:floating-point', { fg = p.orange } },
+    { 'def:complex', { fg = p.orange } },
+    { 'def:boolean', { fg = p.orange } },
     { 'def:character', { fg = p.green } },
     { 'def:string', { fg = p.green } },
     { 'def:special-char', { fg = p.purple } },
@@ -780,12 +691,7 @@ local function gen_gtksourceview(p, variant, _term, appearance)
     local r = profile.syntax
     local literal = { fg = r.literal.fg }
     local number = { fg = (r.number or r.literal).fg }
-    local link = {
-      fg = r.link.fg,
-      bold = r.link.bold,
-      italic = r.link.italic,
-      underline = r.link.underline,
-    }
+    local link = { fg = r.link.fg }
     local profile_styles = {
       ['def:constant'] = literal,
       ['def:special-constant'] = literal,
@@ -798,9 +704,9 @@ local function gen_gtksourceview(p, variant, _term, appearance)
       ['def:character'] = literal,
       ['def:string'] = literal,
       ['def:special-char'] = literal,
-      ['def:function'] = { fg = r.definition.fg, bold = true },
-      ['def:builtin'] = { fg = r.builtin.fg, italic = true },
-      ['def:type'] = { fg = r.type.fg, italic = true },
+      ['def:function'] = { fg = r.definition.fg },
+      ['def:builtin'] = { fg = r.builtin.fg },
+      ['def:type'] = { fg = r.type.fg },
       ['def:preprocessor'] = { fg = r.control.fg },
       ['def:keyword'] = { fg = r.control.fg },
       ['def:statement'] = { fg = r.control.fg },
@@ -808,42 +714,14 @@ local function gen_gtksourceview(p, variant, _term, appearance)
       ['def:net-address'] = link,
       ['def:link-destination'] = link,
       ['def:link-text'] = link,
-      ['def:heading'] = { fg = profile.headings[1], bold = true },
-      ['def:heading0'] = { fg = profile.headings[1], bold = true },
-      ['def:heading1'] = { fg = profile.headings[1], bold = true },
-      ['def:heading2'] = { fg = profile.headings[2], bold = true },
-      ['def:heading3'] = { fg = profile.headings[3], bold = true },
-      ['def:heading4'] = { fg = profile.headings[4], bold = true },
-      ['def:heading5'] = { fg = profile.headings[5], bold = true },
-      ['def:heading6'] = { fg = profile.headings[6], bold = true },
-    }
-    for _, style in ipairs(styles) do
-      style[2] = profile_styles[style[1]] or style[2]
-    end
-  elseif appearance.name == 'token-flint' or appearance.name == 'token-temper' then
-    local is_temper = appearance.name == 'token-temper'
-    local literal = is_temper and { fg = p.accent, italic = true } or { fg = p.green }
-    local profile_styles = {
-      ['def:constant'] = literal,
-      ['def:special-constant'] = literal,
-      ['def:number'] = literal,
-      ['def:decimal'] = literal,
-      ['def:base-n-integer'] = literal,
-      ['def:floating-point'] = literal,
-      ['def:complex'] = literal,
-      ['def:boolean'] = literal,
-      ['def:character'] = literal,
-      ['def:string'] = literal,
-      ['def:special-char'] = literal,
-      ['def:function'] = { fg = p.accent, bold = true },
-      ['def:builtin'] = { fg = p.fg1, italic = true },
-      ['def:type'] = { fg = p.fg1, italic = true },
-      ['def:preprocessor'] = { fg = p.accent2 },
-      ['def:inline-code'] = literal,
-      ['def:heading3'] = { fg = p.fg1, bold = true },
-      ['def:heading4'] = { fg = p.accent, bold = true },
-      ['def:heading5'] = { fg = p.accent2, bold = true },
-      ['def:heading6'] = { fg = p.fg1, bold = true },
+      ['def:heading'] = { fg = profile.headings[1] },
+      ['def:heading0'] = { fg = profile.headings[1] },
+      ['def:heading1'] = { fg = profile.headings[1] },
+      ['def:heading2'] = { fg = profile.headings[2] },
+      ['def:heading3'] = { fg = profile.headings[3] },
+      ['def:heading4'] = { fg = profile.headings[4] },
+      ['def:heading5'] = { fg = profile.headings[5] },
+      ['def:heading6'] = { fg = profile.headings[6] },
     }
     for _, style in ipairs(styles) do
       style[2] = profile_styles[style[1]] or style[2]
@@ -1127,6 +1005,7 @@ local function gen_pi(p, variant, appearance)
         { 'yellow', p.yellow },
         { 'purple', p.purple },
         { 'cyan', p.cyan },
+        { 'orange', p.orange },
         { 'selection', p.sel },
         { 'diffAdd', p.diff_add },
         { 'diffDel', p.diff_del },
@@ -1175,7 +1054,7 @@ local function gen_pi(p, variant, appearance)
         { 'syntaxFunction', r and r.definition.fg or 'accent' },
         { 'syntaxVariable', r and r.variable.fg or 'fg0' },
         { 'syntaxString', r and r.literal.fg or 'green' },
-        { 'syntaxNumber', r and (r.number or r.literal).fg or 'purple' },
+        { 'syntaxNumber', r and (r.number or r.literal).fg or 'orange' },
         { 'syntaxType', r and r.type.fg or 'blue' },
         { 'syntaxOperator', r and r.operator.fg or 'fg1' },
         { 'syntaxPunctuation', r and r.punctuation.fg or 'fg1' },
@@ -1619,31 +1498,6 @@ local function gen_xcode(p, variant, _term, appearance)
     for _, role in ipairs(syntax_roles) do
       role[2] = profile_colors[role[1]] or role[2]
     end
-  elseif appearance.name == 'token-flint' or appearance.name == 'token-temper' then
-    local is_temper = appearance.name == 'token-temper'
-    local profile_colors = {
-      ['xcode.syntax.attribute'] = p.fg1,
-      ['xcode.syntax.character'] = is_temper and p.accent or p.green,
-      ['xcode.syntax.declaration.type'] = p.accent,
-      ['xcode.syntax.identifier.class'] = p.fg1,
-      ['xcode.syntax.identifier.class.system'] = p.fg1,
-      ['xcode.syntax.identifier.constant'] = is_temper and p.accent or p.green,
-      ['xcode.syntax.identifier.constant.system'] = is_temper and p.accent or p.green,
-      ['xcode.syntax.identifier.function.system'] = p.fg1,
-      ['xcode.syntax.identifier.macro'] = p.accent2,
-      ['xcode.syntax.identifier.macro.system'] = p.accent2,
-      ['xcode.syntax.identifier.type'] = p.fg1,
-      ['xcode.syntax.identifier.type.system'] = p.fg1,
-      ['xcode.syntax.identifier.variable.system'] = p.fg1,
-      ['xcode.syntax.markup.code'] = is_temper and p.accent or p.green,
-      ['xcode.syntax.number'] = is_temper and p.accent or p.green,
-      ['xcode.syntax.preprocessor'] = p.accent2,
-      ['xcode.syntax.string'] = is_temper and p.accent or p.green,
-      ['xcode.syntax.url'] = is_temper and p.accent or p.blue,
-    }
-    for _, role in ipairs(syntax_roles) do
-      role[2] = profile_colors[role[1]] or role[2]
-    end
   end
 
   lines[#lines + 1] = '    <key>DVTSourceTextSyntaxColors</key>'
@@ -1893,7 +1747,7 @@ local function gen_vscode_theme(p, variant, term, appearance)
     { 'macro', p.purple },
     { 'keyword', p.accent2 },
     { 'string', p.green },
-    { 'number', p.purple },
+    { 'number', p.orange },
     { 'enumMember', p.purple },
     { 'variable.readonly', p.purple },
     { 'property.readonly', p.purple },
@@ -1903,151 +1757,38 @@ local function gen_vscode_theme(p, variant, term, appearance)
     { '*.async', json_object({ { 'italic', true } }) },
     { '*.static', json_object({ { 'italic', true } }) },
     { '*.abstract', json_object({ { 'italic', true } }) },
-    { '*.defaultLibrary', json_object({ { 'italic', true } }) },
-    { '*.declaration', json_object({ { 'bold', true } }) },
-    { '*.definition', json_object({ { 'bold', true } }) },
   }
-  if appearance.name == 'token-flint' then
-    semantic_colors = {
-      { 'class', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
-      { 'enum', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
-      { 'interface', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
-      { 'struct', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
-      { 'type', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
-      { 'typeParameter', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
-      { 'namespace', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
-      { 'function', p.accent },
-      { 'method', p.accent },
-      { 'macro', p.accent2 },
-      { 'keyword', p.accent2 },
-      { 'string', p.green },
-      { 'number', p.green },
-      { 'enumMember', p.green },
-      { 'variable.readonly', p.green },
-      { 'property.readonly', p.green },
-      { 'parameter', p.fg1 },
-      { '*.deprecated', json_object({ { 'strikethrough', true } }) },
-      { '*.readonly', json_object({ { 'foreground', p.green } }) },
-      { '*.async', json_object({ { 'italic', true } }) },
-      { '*.static', json_object({ { 'italic', true } }) },
-      { '*.abstract', json_object({ { 'italic', true } }) },
-      { '*.defaultLibrary', json_object({ { 'italic', true } }) },
-      { '*.declaration', json_object({ { 'bold', true } }) },
-      { '*.definition', json_object({ { 'bold', true } }) },
-    }
-    for _, token_type in ipairs({ 'type', 'class', 'enum', 'interface', 'struct', 'typeParameter' }) do
-      for _, modifier in ipairs({ 'declaration', 'definition' }) do
-        semantic_colors[#semantic_colors + 1] = {
-          token_type .. '.' .. modifier,
-          json_object({ { 'foreground', p.accent }, { 'bold', true }, { 'italic', false } }),
-        }
-      end
-    end
-  elseif appearance.name == 'token-temper' then
-    semantic_colors = {
-      { 'class', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
-      { 'enum', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
-      { 'interface', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
-      { 'struct', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
-      { 'type', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
-      { 'typeParameter', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
-      { 'namespace', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
-      { 'function', p.accent },
-      { 'method', p.accent },
-      { 'macro', p.accent2 },
-      { 'keyword', p.accent2 },
-      { 'string', json_object({ { 'foreground', p.accent }, { 'italic', true } }) },
-      { 'number', json_object({ { 'foreground', p.accent }, { 'italic', true } }) },
-      { 'enumMember', json_object({ { 'foreground', p.accent }, { 'italic', true } }) },
-      { 'variable.readonly', json_object({ { 'foreground', p.accent }, { 'italic', true } }) },
-      { 'property.readonly', json_object({ { 'foreground', p.accent }, { 'italic', true } }) },
-      { 'parameter', p.fg1 },
-      { '*.deprecated', json_object({ { 'strikethrough', true } }) },
-      { '*.readonly', json_object({ { 'foreground', p.accent }, { 'italic', true } }) },
-      { '*.async', json_object({ { 'italic', true } }) },
-      { '*.static', json_object({ { 'italic', true } }) },
-      { '*.abstract', json_object({ { 'italic', true } }) },
-      { '*.defaultLibrary', json_object({ { 'foreground', p.fg1 }, { 'italic', true } }) },
-      { '*.declaration', json_object({ { 'bold', true } }) },
-      { '*.definition', json_object({ { 'bold', true } }) },
-    }
-    for _, token_type in ipairs({
-      'type',
-      'class',
-      'enum',
-      'interface',
-      'struct',
-      'typeParameter',
-      'function',
-      'method',
-    }) do
-      for _, modifier in ipairs({ 'declaration', 'definition' }) do
-        semantic_colors[#semantic_colors + 1] = {
-          token_type .. '.' .. modifier,
-          json_object({ { 'foreground', p.accent }, { 'bold', true }, { 'italic', false } }),
-        }
-      end
-    end
-  elseif appearance.roles then
+  if appearance.roles then
     local profile = role_profile(p, variant, appearance)
     local r = profile.syntax
     local number = r.number or r.literal
     local property = r.property or r.literal
 
-    local function semantic_role(role, attributes, force_object)
-      local entries = { { 'foreground', role.fg } }
-      local styled = false
-      for _, attribute in ipairs(attributes or {}) do
-        if role[attribute] ~= nil then
-          entries[#entries + 1] = { attribute, role[attribute] }
-          styled = true
-        end
-      end
-      return (force_object or styled) and json_object(entries) or role.fg
-    end
-
-    local function definition_role()
-      local entries = { { 'foreground', r.definition.fg } }
-      if r.definition.bold ~= nil then
-        entries[#entries + 1] = { 'bold', r.definition.bold }
-      end
-      local italic = r.definition.italic
-      if italic == nil then
-        italic = false
-      end
-      entries[#entries + 1] = { 'italic', italic }
-      return json_object(entries)
-    end
-
     semantic_colors = {
-      { 'class', semantic_role(r.type, { 'italic' }, true) },
-      { 'enum', semantic_role(r.type, { 'italic' }, true) },
-      { 'interface', semantic_role(r.type, { 'italic' }, true) },
-      { 'struct', semantic_role(r.type, { 'italic' }, true) },
-      { 'type', semantic_role(r.type, { 'italic' }, true) },
-      { 'typeParameter', semantic_role(r.type, { 'italic' }, true) },
-      { 'namespace', semantic_role(r.type, { 'italic' }, true) },
-      { 'function', semantic_role(r.call, { 'bold', 'italic' }) },
-      { 'method', semantic_role(r.call, { 'bold', 'italic' }) },
-      { 'macro', semantic_role(r.control, { 'bold', 'italic' }) },
-      { 'keyword', semantic_role(r.control, { 'bold', 'italic' }) },
-      { 'string', semantic_role(r.literal, { 'italic' }) },
-      { 'number', semantic_role(number, { 'italic' }) },
+      { 'class', r.type.fg },
+      { 'enum', r.type.fg },
+      { 'interface', r.type.fg },
+      { 'struct', r.type.fg },
+      { 'type', r.type.fg },
+      { 'typeParameter', r.type.fg },
+      { 'namespace', r.type.fg },
+      { 'function', r.call.fg },
+      { 'method', r.call.fg },
+      { 'macro', r.control.fg },
+      { 'keyword', r.control.fg },
+      { 'string', r.literal.fg },
+      { 'number', number.fg },
       { 'enumMember', r.literal.fg },
       { 'variable.readonly', r.literal.fg },
-      { 'property.readonly', semantic_role(property, { 'italic' }) },
+      { 'property.readonly', property.fg },
       { 'parameter', r.parameter.fg },
       { '*.deprecated', json_object({ { 'strikethrough', true } }) },
       { '*.readonly', json_object({ { 'foreground', r.literal.fg } }) },
       { '*.async', json_object({ { 'italic', true } }) },
       { '*.static', json_object({ { 'italic', true } }) },
       { '*.abstract', json_object({ { 'italic', true } }) },
-      { '*.defaultLibrary', semantic_role(r.builtin, { 'italic' }) },
+      { '*.defaultLibrary', r.builtin.fg },
     }
-    if r.definition.bold ~= nil then
-      semantic_colors[#semantic_colors + 1] = { '*.declaration', json_object({ { 'bold', r.definition.bold } }) }
-      semantic_colors[#semantic_colors + 1] = { '*.definition', json_object({ { 'bold', r.definition.bold } }) }
-    end
     for _, token_type in ipairs({
       'type',
       'class',
@@ -2061,7 +1802,7 @@ local function gen_vscode_theme(p, variant, term, appearance)
       for _, modifier in ipairs({ 'declaration', 'definition' }) do
         semantic_colors[#semantic_colors + 1] = {
           token_type .. '.' .. modifier,
-          definition_role(),
+          r.definition.fg,
         }
       end
     end

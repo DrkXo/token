@@ -234,6 +234,12 @@ appearance and background bytecode is used instead of the dynamic highlight
 path. Compiled output contains only enabled integrations and omits terminal
 assignments when `terminal_colors = false`.
 
+Compiled caches belong to one configuration. Each compile removes caches left by
+other configurations, so Neovim instances that share a cache directory but use
+different Token options, such as a terminal and a GUI client, keep only the most
+recently compiled set. The other instances use the dynamic path until they are
+compiled again.
+
 Compiled caches are tied to the Token source that created them. Detached Git
 installs use their commit hash; mutable or non-Git installs use the sorted
 metadata of `lua/token/**/*.lua`. Source-mismatched and legacy caches are

@@ -61,12 +61,12 @@
     {
       "name": "Boolean",
       "scope": "constant.language.boolean",
-      "foreground": "#6d4717"
+      "foreground": "#613500"
     },
     {
       "name": "Number",
       "scope": "constant.numeric",
-      "foreground": "#573c72"
+      "foreground": "#613500"
     },
     {
       "name": "Constant",
